@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* University-compliant global styles */
+@layer base {
+  body {
+    font-family: Inter, Roboto, system-ui, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* Focus rings for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  /* Skip link for accessibility */
+  .skip-link {
+    position: absolute;
+    top: -2.5rem;
+    left: 1rem;
+    background-color: #1e3a8a;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transform: translateY(-100%);
+    transition: transform 0.2s ease-in-out;
+    text-decoration: none;
+    font-weight: 500;
+    z-index: 9999;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@layer components {
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .status-available {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  .status-checked_out {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-broken {
+    background-color: #fecaca;
+    color: #991b1b;
+  }
+}
