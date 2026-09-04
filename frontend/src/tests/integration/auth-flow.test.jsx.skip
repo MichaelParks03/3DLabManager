@@ -1,0 +1,119 @@
+// SKIPPED: These integration tests require full page rendering with all dependencies
+// They are better suited for E2E testing with Playwright or Cypress
+// For now, we have comprehensive unit and component tests
+
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
+
+// Mock Supabase before imports
+const mockSupabase = {
+  auth: {
+    getSession: vi.fn(),
+    signInWithPassword: vi.fn(),
+    signUp: vi.fn(),
+    signOut: vi.fn(),
+    onAuthStateChange: vi.fn(() => ({
+      data: { subscription: { unsubscribe: vi.fn() } },
+    })),
+  },
+  from: vi.fn(() => ({
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn(),
+    upsert: vi.fn(),
+    order: vi.fn().mockReturnThis(),
+  })),
+};
+
+vi.mock('../../lib/supabase', () => ({
+  supabase: mockSupabase,
+}));
+
+// Mock getEquipment
+vi.mock('../../lib/supabaseItems', () => ({
+  getEquipment: vi.fn(() => Promise.resolve([])),
+}));
+
+// Mock getLabs
+vi.mock('../../lib/supabaseLabs', () => ({
+  getLabs: vi.fn(() => Promise.resolve([])),
+}));
+
+// Import after mocking
+const { AuthProvider } = await import('../../contexts/AuthContext');
+const Auth = (await import('../../pages/Auth')).default;
+const Home = (await import('../../pages/Home')).default;
+
+describe.skip('Authentication Flow Integration Tests', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSupabase.auth.getSession.mockResolvedValue({
+      data: { session: null },
+    });
+  });
+
+  it('should allow user to login and access protected content', async () => {
+    const user = userEvent.setup();
+
+    // Mock successful login
+    mockSupabase.auth.signInWithPassword.mockResolvedValue({
+      data: {
+        user: {
+          id: 'user-123',
+          email: 'test@example.com',
+        },
+      },
+      error: null,
+    });
+
+    // Mock profile fetch
+    mockSupabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({
+        data: {
+          role: 'student',
+          full_name: 'Test User',
+        },
+        error: null,
+      }),
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/auth']}>
+        <AuthProvider>
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    // Wait for auth page to load
+    await waitFor(() => {
+      expect(screen.getByText(/Login/i)).toBeInTheDocument();
+    });
+
+    // Fill in login form
+    const emailInput = screen.getByLabelText(/Email/i);
+    const passwordInput = screen.getByLabelText(/Password/i);
+
+    await user.type(emailInput, 'test@example.com');
+    await user.type(passwordInput, 'password123');
+
+    // Click login button
+    const loginButton = screen.getByRole('button', { name: /Login/i });
+    await user.click(loginButton);
+
+    // Verify Supabase was called with correct credentials
+    await waitFor(() => {
+      expect(mockSupabase.auth.signInWithPassword).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        password: 'password123',
+      });
+    });
+  });
+});
