@@ -44,40 +44,56 @@ Liam will be responsible for creating the sprint burn down chart at the end of e
 The sprint retrospective will occur during the creation of the sprint review slides. Reporting will take the form of the provided template, documenting (among other things) the: goal, completed items, and burndown chart. Individual sprint reviews are to be completed by team members on their own time frame, before the due date.
 
 \subsubsection{Individual Status Reports}
-What sort of status will be reported by each individual member, and how often will it be reported? What key items will be contained in the report?
+Individuals of the group will submit a report that can be broken down into the following 6 sections:
+\begin{enumerate}
+    \item \textbf{Sprint Goal}: This will outline the goal of the completed sprint within a sentence or two.
+    \item \textbf{Sprint Backlog}: This is a table of tasks assigned to the team to finish within the sprint. It will contain the name of the task, the expected time to finish and the actual time to finish.
+    \item \textbf{Individual Time Expenditures}: This will include a table of the tasks assigned to the individual how much time was put into the each task, and approximate percentage they think the task is finished.
+    \item \textbf{Burndown Chart}: This will be an image of line graph which displays the expected remaining hours over the days of the sprint and the actual hours remaining over the sprint.
+    \item \textbf{Individual Retrospective}: This will include 3 sections with three distinct bullet points in each section for the individual to fill out. These three sections are what actions/items they will start working on, will stop working on, and continue to work on.
+    \item \textbf{Peer Review}: This will be a table evaluating the other team members based on the five criteria: Participation, Communication, Professionalism, Work quality, and Overall performance.  They will be rated on the scale of 1-5 where 1 is abysmal and 5 is perfect
+\end{enumerate}
 
 \subsubsection{Engineering Notebooks}
-How often will the engineering notebook be updated, at a minimum, by each team member? What is the minimum amount of pages that will be completed for each interval, and how long will that interval be? How will the team keep each member accountable? Who will sign of as a "witness" for each ENB page?
+Engineering Notebooks will not be used in this project.
 
 \subsection{Closeout Materials}
-The following materials, in addition to major documentation deliverables, will be provided to the customer upon project closeout. Remove this paragraph from your draft, but leave the heading.
 
 \subsubsection{System Prototype}
-What will be included in the final system prototype? How and when will this be demonstrated? Will there be a Prototype Acceptance Test (PAT) with your customer? Will anything be demonstrated off-site? If so, will there be a Field Acceptance Test (FAT)?
+The final prototype for the system will include a usable website that anyone can interact with in order to find what piece of equipment or tool they are looking for. Additionally, there will be a server that will be hosting the website on the local network of the SD labs (AKA SkyNet) and a kiosk available to students at the door of Steven's office in ERB 208 that students can interact with.
+We will present this by showing Steven the capabilities of the website through demos and interacting with the system such that he is satisfied with the prototype.
+
 
 \subsubsection{Project Poster}
-What will be included on the poster, what will be the final dimensions, and when will it be delivered?
+The poster will include 5 sections:
+\begin{enumerate}
+    \item \textbf{Background}: Which will include the purpose and why we are making the product
+    \item \textbf{Key Requirements}: Includes the high-level requirements, and their descriptions, of our project
+    \item \textbf{Implementation and Test Plan}: This will be broken down into the major sections of the project (e.g. frontend and backend), how we designed them (e.g. what framework was used and why), and how we plan to test.
+    \item \textbf{Conclusion and Future Work}: Mainly detailing if our goals were accomplished and what we would like to work on in the future if we could.
+    \item \textbf{References}: list of places of information that helped us accomplish the final prototype.
+\end{enumerate}
 
 \subsubsection{Web Page}
-What will be included on the project web page? Will it be accessible to the public? When will this be delivered? Will it be updated throughout the project, or just provided at closeout (at a minimum, you need to provide a simple web page at the end).
+The project web page will include all project requirements as it will be the medium for interacting with our target audience. More specifically, this will hold equipment positions (with visuals), A ticket system to inform Steven McDermott of equipment needs or damaged equipment, and finally a way to allow admins to modify what equipment is held in the labs. The website will be made available to the public but can only be accessed through the local network of SkyNet. Initial prototypes of the website will be made available by December 2026 and a finalized website will be available around May 2027. Continuously being updated as we make progress throughout the sprints.
 
 \subsubsection{Demo Video}
-What will be shown in the demo video(s)? Will you include a B-reel footage for future video cuts? Approximately how long will the video(s) be, and what topics will be covered?
+In our demo video we will try to emphasize our major features of the website including visualizations, the ticket process, and admin privileges for Steven to use. The video should be approximately 2-5 minutes depending on how much of the requirements we will be able to finish within the time frame. 
 
 \subsubsection{Source Code}
-How will your source code be maintained? What version control system will you adopt? Will source code be provided to the customer, or binaries only? If source code is provided, how will it be turned over to the customer? Will the project be open sourced to the general public? If so, what are the license terms (GNU, GPL, MIT, etc.). Where will the license terms be listed (in each source file, in a single readme file, etc.).
+Source code will be made available through github where we will be able to maintain and implement a version control system. The source code will not be directly provided to the customer as they are only interested in the usability of the website rather than interacting with the code. Alternatively, they will have access to the code through the public github repo we will use and the code on the local server hosting the website. With this being a public website, a license will be needed to ensure ownership is sustained which has been chosen to be the MIT license. This license will be visible within the github repo and in the main directory of the source code.
 
 \subsubsection{Source Code Documentation}
-What documentation standards will be employed? Will you use tools to generate the documentation (Doxygen, Javadocs, etc.). In what format will the final documentation be provided (PDF, browsable HTML, etc.)?
+Because we will be using ReactJS and PostgreSQL for our project, there are not any automatic documentation programs to use. Instead we will create documentation manually using markdown files that will allow for easy to read documentation while also being flexible in how we change the documentation. At a high level, this documentation will include the polymorphic hierarchies we create, function descriptions (including expected parameters and outputs), and instructions on how to setup the website. This will also include examples for easier understanding.
 
 \subsubsection{Hardware Schematics}
-Will you be creating printed circuit boards (PCBs) or wiring components together? If so, list each applicable schematic and what sort of data it will contain (PCB layout, wiring diagram, etc.). If your project is purely software, omit this section.
+The kiosk is thus far the only planned piece of hardware we will be using and therefore no hardware schematics will be used. 
 
 \subsubsection{CAD files}
-Will the project involve any mechanical design, such as 3D printed or laser-cut parts? If so, what software will you use to generate the files and what file formats will you provide in your closeout materials (STL, STEP, OBJ, etc.). If your project is purely software, omit this section.
+The kiosk for the project will be need to mounted, however, it has not been finalized whether it is better to use a store bought mount or use a 3D printed mount. If it were decided to 3D print a mount, PLA or a PETG filament will be used and the software to convert to binary files for the 3D printer to read would be CURA. 
 
 \subsubsection{Installation Scripts}
-How will the customer deploy software to new installations? Will you provide installation scripts, install programs, or any other tools to improve the process? Will there be multiple scripts provided (perhaps separate scripts for the graphical front end and back end server software)? 
+Installation instructions will be provided as both a pdf and a markdown files for easy readability. These will include commands to build the website and the necessary environmental variables needed to run the program. Because we are using docker, there will be a few package installation scripts necessary for the frontend and backend, however, with docker there will only be a centralized build script for the user to run. 
 
 \subsubsection{User Manual}
-Will you customer need a printed or digital user manual? Will they need a setup video? Decide now what will be provided and discuss.
+The customer will be provided with a manual of how to install required packages and build the website, additionally, they will be given a demo video on how to use the website.
