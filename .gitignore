@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 
 # Ignore large 3D model files
 frontend/public/models/
+
+.DS_Store
