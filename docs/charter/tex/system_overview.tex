@@ -1,1 +1,18 @@
-Explain, at a high level, how you will implement a solution to the problem. Include a diagram of major components to the system (not a full architectural design, but a high level overview of the major system components and how a user or external system might interface). Avoid specific implementation details (operating system, programming languages, etc.). This section should occupy at least 1 full page.
+The 3D Lab Manager will be  a robust, localized web application designed to track inventory, display spatial item locations, and manage workflows for the ERB202 lab. Building upon the legacy codebase of a previous senior design team, this iteration abandons a strict template approach in favor of heavily refactoring the architecture to prioritize ease of use, data security, and advanced search capabilities. The system is fundamentally designed to reduce the lab manager's cognitive load by eliminating redundant data entry and providing an all-in-one ecosystem for facility management.
+
+\subsection*{Major System Components}
+The architecture represents a significant departure from standard monolithic web apps by implementing localized hosting, decoupled heavy storage, and an open-access public tier.
+
+\begin{itemize}
+    \item \textbf{Localized Linux Host:} The primary application will be locally hosted on a dedicated Linux machine residing within the university's senior design network.
+    
+    \item \textbf{3D Asset Service:} Because 3D models of the lab and individual hardware components are  data-heavy, the system will separate the hosting of these 3D files onto a distinct service.
+    
+    \item \textbf{ Search \& Discovery Engine:} A core mandate of the system is item discovery. Our stakeholder has made it known that a search engine that is advanced can alleviate a lot of the redundancies that he faces. This can also allow students to search for things if they are not aware of the specific item that they'd like.
+    
+    \item \textbf{Interactive Kiosk Interface:} The system will feature a dedicated kiosk mode designed specifically for a touchscreen hardware deployment inside ERB202.
+    
+    \item \textbf{Student Issue Tracker:} Integrated directly into the main application, this module allows students to submit localized tickets regarding broken equipment, depleted materials, or safety concerns within the lab.
+    
+    \item \textbf{Redundant Local Database:} All primary lab data will be stored on a local database configured with aggressive redundancy and disaster recovery protocols.
+\end{itemize}
