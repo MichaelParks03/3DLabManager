@@ -142,3 +142,11 @@ vite.config.ts.timestamp-*
 frontend/public/models/
 
 .DS_Store
+
+#Latex
+*.aux
+*.dvi
+*.hst
+*.lof
+*.toc
+*.ver
