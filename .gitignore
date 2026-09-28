@@ -150,3 +150,4 @@ frontend/public/models/
 *.lof
 *.toc
 *.ver
+*.synctex.gz
