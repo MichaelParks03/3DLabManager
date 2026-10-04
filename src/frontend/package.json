@@ -6,11 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run lint && vite build",
-    "lint:ox": "oxlint", 
+    "lint:ox": "oxlint",
     "lint:es": "eslint .",
     "lint": "oxlint && eslint ."
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-regular-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/react-fontawesome": "^3.5.0",
+    "@paper-design/shaders-react": "^0.0.81",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "lucide-react": "^1.51.0",
