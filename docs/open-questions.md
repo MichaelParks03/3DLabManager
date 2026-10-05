@@ -53,3 +53,17 @@ Questions:
 - Who checks that backups succeed: a weekly look at a status script, or alerts sent somewhere?
 
 **Answer:**
+
+### 4. Issue report notifications
+
+**Blocks:** notifications only. Slice 007 (issues) ships without them, and a notifier can be added later without changing the issues feature.
+
+How should admins learn about new issue reports?
+
+- **Admin queue only:** reports wait in the admin pages, which show a count badge. There are no external dependencies, but Steven sees reports only when he opens the admin pages.
+- **Email:** each new report, or only safety reports, emails the admins. This needs a UTA SMTP relay or a mail account approved by IT.
+- **Chat webhook:** new reports post to a Teams, Discord, or Slack channel. This is immediate, but the box needs outbound internet access.
+
+Should safety reports be treated differently, such as always notifying immediately?
+
+**Answer:**
