@@ -1,10 +1,13 @@
 import asyncio
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
+from contextlib import AsyncExitStack
 from pathlib import Path
 
+import pytest
 import pytest_asyncio
 from alembic import command
 from alembic.config import Config
+from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
@@ -12,9 +15,20 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engin
 
 from app.core.config import get_settings
 from app.core.db import get_session
+from app.features.auth.models import Admin
+from app.features.auth.service import create_admin
 from app.main import create_app
 
 ALEMBIC_INI = Path(__file__).parents[1] / "alembic.ini"
+PASSWORD = "correct horse battery"
+
+MakeAdmin = Callable[..., Awaitable[Admin]]
+Login = Callable[..., Awaitable[AsyncClient]]
+
+
+def new_client(app: FastAPI) -> AsyncClient:
+    # https base url lets Secure cookies round-trip
+    return AsyncClient(transport=ASGITransport(app=app), base_url="https://test")
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -48,10 +62,41 @@ async def db_session(database: AsyncEngine) -> AsyncIterator[AsyncSession]:
         await transaction.rollback()
 
 
-@pytest_asyncio.fixture
-async def client(db_session: AsyncSession) -> AsyncIterator[AsyncClient]:
+@pytest.fixture
+def app(db_session: AsyncSession) -> FastAPI:
     app = create_app()
     app.dependency_overrides[get_session] = lambda: db_session
-    # https base url lets Secure cookies round-trip
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="https://test") as c:
+    return app
+
+
+@pytest_asyncio.fixture
+async def client(app: FastAPI) -> AsyncIterator[AsyncClient]:
+    async with new_client(app) as c:
         yield c
+
+
+@pytest.fixture
+def make_admin(db_session: AsyncSession) -> MakeAdmin:
+    async def factory(email: str = "admin@uta.edu", name: str = "Admin", password: str = PASSWORD):
+        return await create_admin(db_session, email=email, name=name, password=password)
+
+    return factory
+
+
+@pytest_asyncio.fixture
+async def login(app: FastAPI) -> AsyncIterator[Login]:
+    async with AsyncExitStack() as stack:
+
+        async def factory(email: str, password: str = PASSWORD) -> AsyncClient:
+            c = await stack.enter_async_context(new_client(app))
+            r = await c.post("/api/auth/login", json={"email": email, "password": password})
+            assert r.status_code == 200
+            return c
+
+        yield factory
+
+
+@pytest_asyncio.fixture
+async def admin_client(make_admin: MakeAdmin, login: Login) -> AsyncClient:
+    admin = await make_admin()
+    return await login(admin.email, PASSWORD)
