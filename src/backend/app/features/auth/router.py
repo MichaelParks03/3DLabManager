@@ -2,15 +2,16 @@ from typing import Annotated
 
 from fastapi import APIRouter, Cookie, Response
 
-from app.core.config import get_settings
 from app.core.db import DbSession
 from app.core.errors import AppError, error_responses
-from app.features.auth.dependencies import CurrentAdmin
+from app.features.auth.dependencies import (
+    COOKIE_PATH,
+    SESSION_COOKIE,
+    CurrentAdmin,
+    set_session_cookie,
+)
 from app.features.auth.schemas import AdminRead, LoginRequest
 from app.features.auth.service import authenticate, create_session, delete_session
-
-SESSION_COOKIE = "session"
-COOKIE_PATH = "/api"
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -20,16 +21,7 @@ async def login(body: LoginRequest, response: Response, db: DbSession) -> AdminR
     admin = await authenticate(db, email=body.email, password=body.password)
     if admin is None:
         raise AppError(401, "invalid_credentials", "Email or password is incorrect")
-    settings = get_settings()
-    response.set_cookie(
-        SESSION_COOKIE,
-        await create_session(db, admin),
-        httponly=True,
-        samesite="lax",
-        secure=settings.cookie_secure,
-        path=COOKIE_PATH,
-        max_age=settings.session_ttl_days * 86400,
-    )
+    set_session_cookie(response, await create_session(db, admin))
     return AdminRead.model_validate(admin)
 
 

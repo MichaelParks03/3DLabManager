@@ -20,6 +20,7 @@ async def test_login_sets_session_cookie(client, make_admin):
     assert "httponly" in cookie
     assert "samesite=lax" in cookie
     assert "path=/api" in cookie
+    assert "max-age=604800" in cookie
 
 
 async def test_login_normalizes_email(client, make_admin):
@@ -62,6 +63,14 @@ async def test_me_returns_current_admin(admin_client):
     r = await admin_client.get("/api/auth/me")
     assert r.status_code == 200
     assert r.json()["email"] == "admin@uta.edu"
+
+
+async def test_authenticated_request_slides_cookie_expiry(admin_client):
+    r = await admin_client.get("/api/auth/me")
+    cookie = r.headers["set-cookie"].lower()
+    assert "session=" in cookie
+    assert "max-age=604800" in cookie
+    assert "path=/api" in cookie
 
 
 async def test_logout_ends_session(admin_client):
