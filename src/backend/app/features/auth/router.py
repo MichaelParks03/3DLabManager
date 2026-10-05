@@ -36,7 +36,7 @@ async def logout(
     response.delete_cookie(SESSION_COOKIE, path=COOKIE_PATH)
 
 
-@router.get("/me", responses=error_responses(401))
+@router.get("/me", summary="Current admin", responses=error_responses(401))
 async def get_me(admin: CurrentAdmin) -> AdminRead:
     return AdminRead.model_validate(admin)
 

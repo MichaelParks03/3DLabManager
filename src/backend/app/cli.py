@@ -1,7 +1,9 @@
 import argparse
 import asyncio
+import json
 import sys
 from getpass import getpass
+from pathlib import Path
 
 from pydantic import ValidationError
 
@@ -9,6 +11,9 @@ from app.core.db import SessionLocal
 from app.core.errors import AppError
 from app.features.auth import service
 from app.features.auth.schemas import AdminCreate
+from app.main import app
+
+OPENAPI_PATH = Path(__file__).resolve().parent.parent / "openapi.json"
 
 
 async def create_admin(email: str, name: str, password: str) -> None:
@@ -30,6 +35,11 @@ def run_create_admin(args: argparse.Namespace) -> None:
         sys.exit(exc.message)
 
 
+def run_export_openapi(_: argparse.Namespace) -> None:
+    contract = json.dumps(app.openapi(), indent=2) + "\n"
+    OPENAPI_PATH.write_text(contract, encoding="utf-8", newline="\n")
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="app.cli")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -37,6 +47,8 @@ def main(argv: list[str] | None = None) -> None:
     create.add_argument("--email", required=True)
     create.add_argument("--name", required=True)
     create.set_defaults(run=run_create_admin)
+    export = commands.add_parser("export-openapi", help="write openapi.json")
+    export.set_defaults(run=run_export_openapi)
     args = parser.parse_args(argv)
     args.run(args)
 
