@@ -1,0 +1,90 @@
+import hashlib
+import secrets
+from datetime import UTC, datetime, timedelta
+
+from pwdlib import PasswordHash
+from sqlalchemy import delete, select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.config import get_settings
+from app.core.errors import AppError
+from app.features.auth.models import Admin, AdminSession
+
+password_hasher = PasswordHash.recommended()
+# verified against when the email is unknown so response time does not reveal it
+DUMMY_HASH = password_hasher.hash("dummy password")
+
+
+def normalize_email(email: str) -> str:
+    return email.strip().lower()
+
+
+def hash_token(token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def _session_expiry() -> datetime:
+    return datetime.now(UTC) + timedelta(days=get_settings().session_ttl_days)
+
+
+async def create_admin(db: AsyncSession, *, email: str, name: str, password: str) -> Admin:
+    admin = Admin(
+        email=normalize_email(email), name=name, password_hash=password_hasher.hash(password)
+    )
+    db.add(admin)
+    try:
+        await db.commit()
+    except IntegrityError as exc:
+        await db.rollback()
+        raise AppError(409, "email_taken", "An admin with this email already exists") from exc
+    return admin
+
+
+async def authenticate(db: AsyncSession, *, email: str, password: str) -> Admin | None:
+    admin = await db.scalar(select(Admin).where(Admin.email == normalize_email(email)))
+    password_ok = password_hasher.verify(password, admin.password_hash if admin else DUMMY_HASH)
+    return admin if admin and admin.is_active and password_ok else None
+
+
+async def create_session(db: AsyncSession, admin: Admin) -> str:
+    token = secrets.token_urlsafe(32)
+    await db.execute(
+        delete(AdminSession).where(
+            AdminSession.admin_id == admin.id, AdminSession.expires_at <= datetime.now(UTC)
+        )
+    )
+    db.add(
+        AdminSession(token_hash=hash_token(token), admin_id=admin.id, expires_at=_session_expiry())
+    )
+    await db.commit()
+    return token
+
+
+async def resolve_session(db: AsyncSession, token: str) -> Admin | None:
+    row = (
+        await db.execute(
+            select(AdminSession, Admin)
+            .join(Admin, Admin.id == AdminSession.admin_id)
+            .where(AdminSession.token_hash == hash_token(token))
+        )
+    ).one_or_none()
+    if row is None:
+        return None
+    session, admin = row
+    now = datetime.now(UTC)
+    if session.expires_at <= now:
+        await db.delete(session)
+        await db.commit()
+        return None
+    if not admin.is_active:
+        return None
+    session.last_used_at = now
+    session.expires_at = _session_expiry()
+    await db.commit()
+    return admin
+
+
+async def delete_session(db: AsyncSession, token: str) -> None:
+    await db.execute(delete(AdminSession).where(AdminSession.token_hash == hash_token(token)))
+    await db.commit()
