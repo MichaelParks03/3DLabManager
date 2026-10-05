@@ -1,3 +1,5 @@
+import pytest
+
 from tests.conftest import PASSWORD
 
 
@@ -63,3 +65,11 @@ async def test_update_unknown_admin(admin_client):
     r = await admin_client.patch("/api/admins/999999", json={"name": "Ghost"})
     assert r.status_code == 404
     assert r.json()["error"]["code"] == "admin_not_found"
+
+
+@pytest.mark.parametrize("field", ["name", "isActive"])
+async def test_update_rejects_explicit_null(admin_client, make_admin, field):
+    other = await make_admin(email="ta@uta.edu")
+    r = await admin_client.patch(f"/api/admins/{other.id}", json={field: None})
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "validation_error"

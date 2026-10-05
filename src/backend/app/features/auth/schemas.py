@@ -25,5 +25,6 @@ class AdminCreate(ApiSchema):
 
 
 class AdminUpdate(ApiSchema):
-    name: str | None = Field(default=None, min_length=1, max_length=100)
-    is_active: bool | None = None
+    # defaults are never applied, service reads only the fields the client sent
+    name: str = Field(default="", min_length=1, max_length=100)
+    is_active: bool = True
