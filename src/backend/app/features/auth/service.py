@@ -6,6 +6,7 @@ from pwdlib import PasswordHash
 from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
 from app.core.errors import AppError
@@ -30,7 +31,9 @@ def _session_expiry() -> datetime:
 
 async def create_admin(db: AsyncSession, *, email: str, name: str, password: str) -> Admin:
     admin = Admin(
-        email=normalize_email(email), name=name, password_hash=password_hasher.hash(password)
+        email=normalize_email(email),
+        name=name,
+        password_hash=await run_in_threadpool(password_hasher.hash, password),
     )
     db.add(admin)
     try:
@@ -43,7 +46,8 @@ async def create_admin(db: AsyncSession, *, email: str, name: str, password: str
 
 async def authenticate(db: AsyncSession, *, email: str, password: str) -> Admin | None:
     admin = await db.scalar(select(Admin).where(Admin.email == normalize_email(email)))
-    password_ok = password_hasher.verify(password, admin.password_hash if admin else DUMMY_HASH)
+    stored_hash = admin.password_hash if admin else DUMMY_HASH
+    password_ok = await run_in_threadpool(password_hasher.verify, password, stored_hash)
     return admin if admin and admin.is_active and password_ok else None
 
 
