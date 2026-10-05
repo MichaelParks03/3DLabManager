@@ -1,37 +1,55 @@
-version: '3.8'
+x-backend-env: &backend-env
+  DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+  COOKIE_SECURE: ${COOKIE_SECURE}
 
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secure_password
-      POSTGRES_DB: inventory_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     deploy:
       resources:
-        # Set memory limit for 3D files 
         limits:
           memory: 512M
+
+  migrate:
+    build: ./backend
+    command: ["uv", "run", "--no-sync", "alembic", "upgrade", "head"]
+    environment: *backend-env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
   backend:
     build: ./backend
     container_name: python_api
     restart: always
-    environment:
-      DATABASE_URL: postgresql://admin:secure_password@db:5432/inventory_db
-      JWT_SECRET: your_jwt_secret_key
-    volumes:
-      - ./uploads:/app/uploads
+    environment: *backend-env
     depends_on:
-      - db
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     deploy:
       resources:
         limits:
-          # Set memory limit for 3D files
           memory: 384M
 
   frontend:
@@ -41,11 +59,11 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     deploy:
       resources:
         limits:
-          # Set memory limit for 3D files
           memory: 128M
 
 volumes:
