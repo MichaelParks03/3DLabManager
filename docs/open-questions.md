@@ -67,3 +67,22 @@ How should admins learn about new issue reports?
 Should safety reports be treated differently, such as always notifying immediately?
 
 **Answer:**
+
+## Team
+
+### 5. Showcase videos
+
+**Blocks:** video support in slice 008 (showcase). The slice ships without videos. If videos are wanted, they are added later as an additive `videos` list on projects.
+
+Should showcase projects have videos at all? If so, should they be embedded links or uploaded files?
+
+- **No videos:** projects keep photos and external links only. A demo video can still be shared as an external link.
+- **Embedded links:** YouTube or Vimeo URLs, embedded by the frontend. There is no storage or processing cost, but viewers need internet access and the videos live on a third-party site.
+- **Uploaded MP4 files:** validated with `ffprobe`, with a poster frame extracted by `ffmpeg` and no transcoding. Files are capped in size and served by nginx. This works without internet, but it adds about 80 MB of ffmpeg to the image, and videos consume disk and backup space on the box.
+- **Both:** one ordered video list per project, where each entry is either a link or an upload.
+
+Transcoding uploads into web formats is ruled out. It would pin the box's CPU for minutes per video.
+
+This depends partly on sponsor question 1 (whether the site and kiosk have internet access) and on the box's disk size.
+
+**Answer:**
