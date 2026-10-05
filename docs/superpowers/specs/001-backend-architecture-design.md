@@ -21,12 +21,12 @@ Several backend developers work in parallel, and one frontend developer consumes
 |---|---|
 | Stack | FastAPI, PostgreSQL 16, SQLAlchemy 2.0 (async, asyncpg), Alembic, Pydantic v2 |
 | Auth | Public read with no login. Local admin accounts only |
-| Search | Postgres only: full-text search, `pg_trgm`, curated keywords. Will likely be revisited, so it stays isolated in one module |
+| Search | Hybrid: Postgres full-text search and `pg_trgm` plus local embeddings in `pgvector`, with natural-language status and lab parsing. Isolated in one module. See spec 003 |
 | Availability | Admin-set status plus quantity. No student checkout |
-| Asset storage | Docker volume served by nginx, behind a storage interface. Built when a slice first needs uploads |
+| Asset storage | Docker volume served by nginx, behind a storage interface. Built in slice 002 for item photos |
 | Contract | Contract-first per slice, committed `openapi.json` |
 | Code layout | Feature modules |
-| Roadmap | Foundation, labs and items, search, deployment and backups, issues, showcase. 3D is deferred. Wireless tracking is out of scope |
+| Roadmap | See section 7. 3D is deferred. Wireless tracking is out of scope |
 
 ## 1. Runtime architecture
 
@@ -48,7 +48,7 @@ All services run with Docker Compose on one Linux box on the senior design netwo
 1. **The backend owns the `/api` prefix.** Every router mounts under `/api` in FastAPI. `src/frontend/nginx.conf` changes `proxy_pass http://backend:5000/;` to `proxy_pass http://backend:5000;`, and `src/frontend/vite.config.js` drops its `rewrite`. The interactive docs then work at `/api/docs` and `/api/openapi.json` in both development and production. The unused `/static` proxy in Vite and `/static/models/` in nginx are removed until the 3D slice defines asset paths.
 2. **Secrets move to `.env`.** `src/docker-compose.yml` stops hardcoding credentials and reads them from a git-ignored `src/.env`. A committed `src/.env.example` documents every variable. The backend refuses to start if a required setting is missing. `JWT_SECRET` is removed, since auth uses database sessions.
 3. **Startup is ordered by health, not timing.** Postgres gets a `pg_isready` healthcheck. A one-shot `migrate` service runs `alembic upgrade head` after the database is healthy, and the backend starts only after `migrate` completes successfully.
-4. **Postgres moves to `postgres:16-alpine`.**
+4. **Postgres moves to version 16,** as `postgres:16-alpine` in the foundation and `pgvector/pgvector:pg16` from slice 003 onward.
 
 ### Configuration
 
@@ -117,7 +117,7 @@ src/backend/
 | Labs and items | `labs` | `slug` (unique, like `erb-208`), `name`, `building`, `room`, `description` |
 | Labs and items | `categories` | `name` (unique) |
 | Labs and items | `items` | `lab_id`, `category_id`, `name`, `description`, `status` (`available`, `in_use`, `broken`, `missing`), `quantity` (`>= 0`), `location` (free text), `keywords` (text array of function words and aliases) |
-| Search | none | Generated weighted `search_vector` on `items` (name, then keywords, then description), and a trigram index on `items.name` |
+| Search | `search_documents` | Item embeddings, plus a generated weighted `search_vector` on `items`. See spec 003 |
 | Issues | `issues` | `item_id` (nullable, `ON DELETE SET NULL`), `lab_id`, `type` (`broken`, `depleted`, `safety`, `other`), `description`, `status` (`open`, `in_progress`, `resolved`), optional `reporter_name` and `reporter_contact`, `resolved_at`, `resolved_by` |
 | Showcase | `projects` | `title`, `summary`, `body`, `lab_id`, `semester`, `credits`, `is_published` |
 
@@ -228,34 +228,35 @@ GitHub Actions runs on pull requests and pushes to `main` that touch `src/backen
 
 This spec's plan, `docs/superpowers/plans/001-backend-architecture.md`, implements the foundation slice. Every later slice gets a short spec (tables, endpoints, error codes) and a plan, sharing the next free ID, written when that slice begins.
 
-| Order | Slice | Delivers |
-|---|---|---|
-| 1 | Foundation | Project skeleton and tooling, `core/`, Alembic, the Compose and proxy changes, `admins` and `sessions`, auth and admin endpoints, `create-admin` CLI, `GET /api/health`, test harness, CI, `openapi.json` export and pre-commit hook |
-| 2 | Labs and items | Labs, categories, and items CRUD. Filtering by lab, category, and status. Simple name matching |
-| 3 | Search | `GET /api/search` with weighted full-text search, trigram typo tolerance, and curated keywords, isolated in `features/search/` so semantic search can replace it later |
-| 4 | Deployment and backups | Production Compose on the Linux box, nightly `pg_dump` to the external SSD with retention, a tested restore procedure, and the TLS decision |
-| 5 | Issues | Anonymous reporting, admin triage, and `openIssueCount` on items |
-| 6 | Showcase | Projects CRUD and publishing. Its spec decides whether image uploads are needed, which would introduce the storage interface |
-| Deferred | 3D | Designed when reached |
+| ID | Slice | Status | Delivers |
+|---|---|---|---|
+| 001 | Foundation | Planned | Project skeleton and tooling, `core/`, Alembic, the Compose and proxy changes, `admins` and `sessions`, auth and admin endpoints, `create-admin` CLI, `GET /api/health`, test harness, CI, `openapi.json` export and pre-commit hook |
+| 002 | Labs and items | Planned | Labs, categories, items, item photo galleries, the storage interface, and the image pipeline |
+| 003 | Search core | Planned | Hybrid search with local embeddings and natural-language filters, behind a benchmark gate |
+| 004 | Deployment and backups | Blocked | Waits on sponsor questions 1 to 3 in `docs/open-questions.md` |
+| 005 | Search type-ahead | Planned | Suggestions, did-you-mean, highlights, and facets |
+| 006 | Search insights | Deferred | Search and click logging, admin reports, and a popularity boost |
+| 007 | Issues | Planned | Anonymous reporting, admin triage, and `openIssueCount` on items. Notifications wait on open question 4 |
+| 008 | Showcase | Planned | Projects with galleries, links, featured placement, and permission-gated publishing. Videos wait on open question 5 |
+| Unassigned | 3D | Deferred | Designed when reached |
 
-Deployment and backups precedes issues so that backups exist before Steven enters real inventory.
+Build order follows the IDs, except that 004 should land before Steven enters real inventory, whenever its questions are answered.
 
 The charter's November 2026 milestone (prototype with inventory database and basic search) corresponds to slices 1 through 3.
 
 ### Parallel work
 
 - **Foundation** is done by one or two developers, since everything depends on it.
-- **Labs and items** puts its models, migration, and contract stubs in its first PR. Once merged, search, issues, and showcase proceed in parallel, each owned by a different developer in a separate feature folder.
+- **Labs and items** puts its models, migration, and contract stubs in its first PR. Once merged, search core, issues, and showcase proceed in parallel, each owned by a different developer in a separate feature folder. Type-ahead follows search core.
 - **Migrations are the shared hotspot.** Before merging, a developer rebases onto `main` and regenerates their migration if `main` gained a new head. CI's single-head check catches it if someone forgets.
 
-### Deferred: asset storage and 3D
+### Asset storage and 3D
 
-When a slice first needs uploads (showcase images or the 3D slice), the backend gains `app/core/storage.py` with `save`, `delete`, and `url_for`. FastAPI validates and streams uploads to a Docker volume, and nginx serves it at `/assets/*` with cache headers, so large files never pass through Python. All asset code goes through that interface, so moving to S3-compatible storage later changes one module and not the API contract. How the backend stores 3D models and item placement is decided in the 3D slice.
+Slice 002 adds `app/core/storage.py` with `save`, `delete`, and `url_for`. FastAPI validates uploads and writes them to a Docker volume, and nginx serves it at `/assets/*` with cache headers, so large files never pass through Python. All asset code goes through that interface, so moving to S3-compatible storage later changes one module and not the API contract. How the backend stores 3D models and item placement is decided in the 3D slice.
 
 ## Out of scope
 
 - Wireless tracking of tools
 - Student checkout
 - Student accounts and UTA SSO
-- Semantic or embedding search (a likely future revision of the search slice)
 - Frontend design, UI, and code structure
