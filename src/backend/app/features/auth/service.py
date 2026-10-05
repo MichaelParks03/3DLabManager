@@ -3,7 +3,7 @@ import secrets
 from datetime import UTC, datetime, timedelta
 
 from pwdlib import PasswordHash
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.concurrency import run_in_threadpool
@@ -11,6 +11,7 @@ from starlette.concurrency import run_in_threadpool
 from app.core.config import get_settings
 from app.core.errors import AppError
 from app.features.auth.models import Admin, AdminSession
+from app.features.auth.schemas import AdminUpdate
 
 password_hasher = PasswordHash.recommended()
 # verified against when the email is unknown so response time does not reveal it
@@ -41,6 +42,30 @@ async def create_admin(db: AsyncSession, *, email: str, name: str, password: str
     except IntegrityError as exc:
         await db.rollback()
         raise AppError(409, "email_taken", "An admin with this email already exists") from exc
+    return admin
+
+
+async def list_admins(db: AsyncSession, *, limit: int, offset: int) -> tuple[list[Admin], int]:
+    admins = await db.scalars(select(Admin).order_by(Admin.id).limit(limit).offset(offset))
+    total = await db.scalar(select(func.count()).select_from(Admin))
+    return list(admins), total or 0
+
+
+async def update_admin(
+    db: AsyncSession, *, admin_id: int, actor: Admin, changes: AdminUpdate
+) -> Admin:
+    admin = await db.get(Admin, admin_id)
+    if admin is None:
+        raise AppError(404, "admin_not_found", "Admin not found")
+    values = changes.model_dump(exclude_unset=True, by_alias=False)
+    deactivating = values.get("is_active") is False
+    if deactivating and admin.id == actor.id:
+        raise AppError(409, "cannot_deactivate_self", "You cannot deactivate your own account")
+    for field, value in values.items():
+        setattr(admin, field, value)
+    if deactivating:
+        await db.execute(delete(AdminSession).where(AdminSession.admin_id == admin.id))
+    await db.commit()
     return admin
 
 

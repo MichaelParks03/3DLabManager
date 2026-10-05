@@ -65,9 +65,9 @@ The code is organized as feature modules. Each feature owns a folder, so one dev
 ```
 src/backend/
   app/
-    core/           config, database session, error handling, base schema, auth dependencies
+    core/           config, database session, error handling, base schema
     features/
-      auth/         router.py  schemas.py  models.py  service.py
+      auth/         router.py  schemas.py  models.py  service.py  dependencies.py
       labs/         ...
       items/        ...
       search/       ...
