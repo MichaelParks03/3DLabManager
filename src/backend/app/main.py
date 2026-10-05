@@ -3,6 +3,7 @@ from fastapi.routing import APIRoute
 from pydantic.alias_generators import to_camel
 
 from app.core.errors import register_error_handlers
+from app.features.health.router import router as health_router
 
 
 def operation_id(route: APIRoute) -> str:
@@ -18,6 +19,7 @@ def create_app() -> FastAPI:
         generate_unique_id_function=operation_id,
     )
     register_error_handlers(app)
+    app.include_router(health_router, prefix="/api")
     return app
 
 
