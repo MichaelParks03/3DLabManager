@@ -1,6 +1,7 @@
 x-backend-env: &backend-env
   DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
   COOKIE_SECURE: ${COOKIE_SECURE}
+  SESSION_TTL_DAYS: ${SESSION_TTL_DAYS}
 
 services:
   db:

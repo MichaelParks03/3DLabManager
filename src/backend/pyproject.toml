@@ -30,9 +30,6 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "ASYNC", "SIM", "RUF"]
 
-[tool.ruff.lint.per-file-ignores]
-"migrations/versions/*" = ["E501"]
-
 [tool.pyright]
 include = ["app"]
 pythonVersion = "3.12"
