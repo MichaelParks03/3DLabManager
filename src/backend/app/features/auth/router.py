@@ -46,7 +46,7 @@ admins_router = APIRouter(prefix="/admins", tags=["admins"], dependencies=[Depen
 
 @admins_router.get("", responses=error_responses(401))
 async def list_admins(db: DbSession, page: Annotated[Pagination, Depends()]) -> Page[AdminRead]:
-    admins, total = await service.list_admins(db, limit=page.limit, offset=page.offset)
+    admins, total = await service.list_admins(db, page)
     return Page(items=[AdminRead.model_validate(a) for a in admins], total=total)
 
 

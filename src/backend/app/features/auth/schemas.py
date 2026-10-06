@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import EmailStr, Field
 
-from app.core.schemas import ApiSchema
+from app.core.schemas import MISSING, ApiSchema, PatchSchema
 
 
 class LoginRequest(ApiSchema):
@@ -24,7 +24,6 @@ class AdminCreate(ApiSchema):
     password: str = Field(min_length=12, max_length=128)
 
 
-class AdminUpdate(ApiSchema):
-    # defaults are never applied, service reads only the fields the client sent
-    name: str = Field(default="", min_length=1, max_length=100)
-    is_active: bool = True
+class AdminUpdate(PatchSchema):
+    name: str | MISSING = Field(MISSING, min_length=1, max_length=100)
+    is_active: bool | MISSING = MISSING

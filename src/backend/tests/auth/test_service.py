@@ -6,8 +6,7 @@ from sqlalchemy import select, update
 from app.core.errors import AppError
 from app.features.auth import service
 from app.features.auth.models import AdminSession
-
-PASSWORD = "correct horse battery"
+from tests.conftest import PASSWORD
 
 
 async def test_create_admin_normalizes_email_and_hashes_password(db_session):
@@ -61,3 +60,10 @@ async def test_expired_session_is_rejected_and_deleted(db_session):
 
 async def test_unknown_token_resolves_to_none(db_session):
     assert await service.resolve_session(db_session, "not-a-token") is None
+
+
+async def test_orm_update_refreshes_updated_at(db_session):
+    admin = await service.create_admin(db_session, email="a@uta.edu", name="A", password=PASSWORD)
+    admin.name = "Renamed"
+    await db_session.commit()
+    assert admin.updated_at >= admin.created_at

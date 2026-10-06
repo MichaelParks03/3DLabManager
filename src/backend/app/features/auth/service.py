@@ -3,13 +3,15 @@ import secrets
 from datetime import UTC, datetime, timedelta
 
 from pwdlib import PasswordHash
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
+from app.core.db import paginate
 from app.core.errors import AppError
+from app.core.schemas import Pagination
 from app.features.auth.models import Admin, AdminSession
 from app.features.auth.schemas import AdminUpdate
 
@@ -45,10 +47,8 @@ async def create_admin(db: AsyncSession, *, email: str, name: str, password: str
     return admin
 
 
-async def list_admins(db: AsyncSession, *, limit: int, offset: int) -> tuple[list[Admin], int]:
-    admins = await db.scalars(select(Admin).order_by(Admin.id).limit(limit).offset(offset))
-    total = await db.scalar(select(func.count()).select_from(Admin))
-    return list(admins), total or 0
+async def list_admins(db: AsyncSession, pagination: Pagination) -> tuple[list[Admin], int]:
+    return await paginate(db, select(Admin).order_by(Admin.id), pagination)
 
 
 async def update_admin(
@@ -57,7 +57,7 @@ async def update_admin(
     admin = await db.get(Admin, admin_id)
     if admin is None:
         raise AppError(404, "admin_not_found", "Admin not found")
-    values = changes.model_dump(exclude_unset=True, by_alias=False)
+    values = changes.changes()
     deactivating = values.get("is_active") is False
     if deactivating and admin.id == actor.id:
         raise AppError(409, "cannot_deactivate_self", "You cannot deactivate your own account")

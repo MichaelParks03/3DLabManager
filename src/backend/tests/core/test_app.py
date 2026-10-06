@@ -21,3 +21,10 @@ async def test_docs_served_under_api(client):
     assert (await client.get("/api/openapi.json")).status_code == 200
     assert (await client.get("/api/docs")).status_code == 200
     assert (await client.get("/openapi.json")).status_code == 404
+
+
+async def test_wrong_method_keeps_allow_header(client):
+    r = await client.delete("/api/health")
+    assert r.status_code == 405
+    assert r.headers["allow"] == "GET"
+    assert r.json()["error"]["code"] == "method_not_allowed"

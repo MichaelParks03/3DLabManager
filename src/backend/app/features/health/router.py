@@ -1,18 +1,12 @@
-from typing import Literal
-
 from fastapi import APIRouter
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.db import DbSession
 from app.core.errors import AppError, error_responses
-from app.core.schemas import ApiSchema
+from app.features.health.schemas import HealthRead
 
 router = APIRouter(prefix="/health", tags=["health"])
-
-
-class HealthRead(ApiSchema):
-    status: Literal["ok"]
 
 
 @router.get("", responses=error_responses(503))

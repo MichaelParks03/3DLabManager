@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from typing import Any
 
 from fastapi import FastAPI, Request
@@ -45,10 +46,14 @@ def error_responses(*status_codes: int) -> dict[int | str, dict[str, Any]]:
 
 
 def _error_response(
-    status_code: int, code: str, message: str, details: list[ErrorDetail] | None = None
+    status_code: int,
+    code: str,
+    message: str,
+    details: list[ErrorDetail] | None = None,
+    headers: Mapping[str, str] | None = None,
 ) -> JSONResponse:
     body = ErrorResponse(error=ErrorBody(code=code, message=message, details=details))
-    return JSONResponse(body.model_dump(mode="json"), status_code=status_code)
+    return JSONResponse(body.model_dump(mode="json"), status_code=status_code, headers=headers)
 
 
 def register_error_handlers(app: FastAPI) -> None:
@@ -67,7 +72,7 @@ def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(StarletteHTTPException)
     async def handle_http_error(_: Request, exc: StarletteHTTPException) -> JSONResponse:
         code = HTTP_ERROR_CODES.get(exc.status_code, "http_error")
-        return _error_response(exc.status_code, code, str(exc.detail))
+        return _error_response(exc.status_code, code, str(exc.detail), headers=exc.headers)
 
     @app.exception_handler(Exception)
     async def handle_unexpected_error(_: Request, __: Exception) -> JSONResponse:

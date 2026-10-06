@@ -527,13 +527,11 @@
             "type": "string",
             "maxLength": 100,
             "minLength": 1,
-            "title": "Name",
-            "default": ""
+            "title": "Name"
           },
           "isActive": {
             "type": "boolean",
-            "title": "Isactive",
-            "default": true
+            "title": "Isactive"
           }
         },
         "type": "object",

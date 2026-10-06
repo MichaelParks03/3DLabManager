@@ -3,8 +3,14 @@ import pytest
 from tests.conftest import PASSWORD
 
 
-async def test_admin_routes_require_session(client):
-    assert (await client.get("/api/admins")).status_code == 401
+@pytest.mark.parametrize(
+    ("method", "path"),
+    [("GET", "/api/admins"), ("POST", "/api/admins"), ("PATCH", "/api/admins/1")],
+)
+async def test_admin_routes_require_session(client, method, path):
+    r = await client.request(method, path, json={})
+    assert r.status_code == 401
+    assert r.json()["error"]["code"] == "not_authenticated"
 
 
 async def test_list_admins(admin_client):
@@ -12,6 +18,13 @@ async def test_list_admins(admin_client):
     assert r.status_code == 200
     assert r.json()["total"] == 1
     assert r.json()["items"][0]["email"] == "admin@uta.edu"
+
+
+async def test_list_admins_paginates(admin_client, make_admin):
+    await make_admin(email="ta@uta.edu")
+    r = await admin_client.get("/api/admins?limit=1&offset=1")
+    assert r.json()["total"] == 2
+    assert [a["email"] for a in r.json()["items"]] == ["ta@uta.edu"]
 
 
 async def test_list_admins_rejects_bad_pagination(admin_client):

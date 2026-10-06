@@ -1,8 +1,12 @@
 from dataclasses import dataclass
+from typing import Any
 
 from fastapi import Query
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
+
+# re-exported so the experimental import lives in one place
+from pydantic.experimental.missing_sentinel import MISSING as MISSING
 
 
 class ApiSchema(BaseModel):
@@ -13,6 +17,12 @@ class ApiSchema(BaseModel):
         serialize_by_alias=True,
         from_attributes=True,
     )
+
+
+class PatchSchema(ApiSchema):
+    # fields default to MISSING, so omitted ones never reach changes
+    def changes(self) -> dict[str, Any]:
+        return self.model_dump(exclude_unset=True, by_alias=False)
 
 
 class Page[T](ApiSchema):
