@@ -4,7 +4,7 @@ from fastapi import APIRouter, Cookie, Depends, Response
 
 from app.core.db import DbSession
 from app.core.errors import AppError, error_responses
-from app.core.schemas import Page, Pagination
+from app.core.schemas import Page, Pagination, RowId
 from app.features.auth import service
 from app.features.auth.dependencies import (
     CurrentAdmin,
@@ -17,7 +17,7 @@ from app.features.auth.schemas import AdminCreate, AdminRead, AdminUpdate, Login
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login", responses=error_responses(401))
+@router.post("/login", responses=error_responses(401, 429))
 async def login(body: LoginRequest, response: Response, db: DbSession) -> AdminRead:
     admin = await service.authenticate(db, email=body.email, password=body.password)
     if admin is None:
@@ -57,7 +57,7 @@ async def create_admin(body: AdminCreate, db: DbSession) -> AdminRead:
 
 @admins_router.patch("/{admin_id}", responses=error_responses(401, 404, 409))
 async def update_admin(
-    admin_id: int, body: AdminUpdate, db: DbSession, actor: CurrentAdmin
+    admin_id: RowId, body: AdminUpdate, db: DbSession, actor: CurrentAdmin
 ) -> AdminRead:
     admin = await service.update_admin(db, admin_id=admin_id, actor=actor, changes=body)
     return AdminRead.model_validate(admin)

@@ -1,12 +1,18 @@
 from dataclasses import dataclass
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import Query
+from fastapi import Path, Query
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
 
 # re-exported so the experimental import lives in one place
 from pydantic.experimental.missing_sentinel import MISSING as MISSING
+
+# Postgres bigint ceiling, larger values overflow the driver instead of failing validation
+MAX_BIGINT = 2**63 - 1
+
+# path parameter for a row id
+RowId = Annotated[int, Path(ge=1, le=MAX_BIGINT)]
 
 
 class ApiSchema(BaseModel):
@@ -33,4 +39,4 @@ class Page[T](ApiSchema):
 @dataclass
 class Pagination:
     limit: int = Query(50, ge=1, le=100)
-    offset: int = Query(0, ge=0)
+    offset: int = Query(0, ge=0, le=MAX_BIGINT)

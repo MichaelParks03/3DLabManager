@@ -86,3 +86,15 @@ async def test_update_rejects_explicit_null(admin_client, make_admin, field):
     r = await admin_client.patch(f"/api/admins/{other.id}", json={field: None})
     assert r.status_code == 422
     assert r.json()["error"]["code"] == "validation_error"
+
+
+async def test_ids_and_offsets_beyond_bigint_are_rejected(admin_client):
+    too_big = 2**63
+    assert (await admin_client.get(f"/api/admins?offset={too_big}")).status_code == 422
+    r = await admin_client.patch(f"/api/admins/{too_big}", json={"name": "Ghost"})
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "validation_error"
+    largest = too_big - 1
+    assert (await admin_client.get(f"/api/admins?offset={largest}")).json()["items"] == []
+    r = await admin_client.patch(f"/api/admins/{largest}", json={"name": "Ghost"})
+    assert r.json()["error"]["code"] == "admin_not_found"
