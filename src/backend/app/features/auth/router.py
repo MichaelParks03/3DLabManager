@@ -7,9 +7,8 @@ from app.core.errors import AppError, error_responses
 from app.core.schemas import Page, Pagination
 from app.features.auth import service
 from app.features.auth.dependencies import (
-    COOKIE_PATH,
-    SESSION_COOKIE,
     CurrentAdmin,
+    clear_session_cookie,
     require_admin,
     set_session_cookie,
 )
@@ -33,7 +32,7 @@ async def logout(
 ) -> None:
     if session:
         await service.delete_session(db, session)
-    response.delete_cookie(SESSION_COOKIE, path=COOKIE_PATH)
+    clear_session_cookie(response)
 
 
 @router.get("/me", summary="Current admin", responses=error_responses(401))

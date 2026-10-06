@@ -78,6 +78,15 @@ async def test_logout_ends_session(admin_client):
     assert (await admin_client.get("/api/auth/me")).status_code == 401
 
 
+async def test_logout_expires_session_cookie(admin_client):
+    cookie = (await admin_client.post("/api/auth/logout")).headers["set-cookie"].lower()
+    assert 'session="";' in cookie
+    assert "max-age=0" in cookie
+    assert "path=/api" in cookie
+    assert "httponly" in cookie
+    assert "samesite=lax" in cookie
+
+
 async def test_logout_without_session_succeeds(client):
     assert (await client.post("/api/auth/logout")).status_code == 204
 

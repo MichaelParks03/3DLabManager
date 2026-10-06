@@ -25,6 +25,16 @@ def set_session_cookie(response: Response, token: str) -> None:
     )
 
 
+def clear_session_cookie(response: Response) -> None:
+    response.delete_cookie(
+        SESSION_COOKIE,
+        httponly=True,
+        samesite="lax",
+        secure=get_settings().cookie_secure,
+        path=COOKIE_PATH,
+    )
+
+
 async def require_admin(
     db: DbSession, response: Response, session: Annotated[str | None, Cookie()] = None
 ) -> Admin:

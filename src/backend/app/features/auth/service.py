@@ -103,7 +103,7 @@ async def resolve_session(db: AsyncSession, token: str) -> Admin | None:
     session, admin = row
     now = datetime.now(UTC)
     if session.expires_at <= now:
-        await db.delete(session)
+        await db.execute(delete(AdminSession).where(AdminSession.id == session.id))
         await db.commit()
         return None
     if not admin.is_active:
