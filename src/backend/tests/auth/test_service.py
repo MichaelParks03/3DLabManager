@@ -1,7 +1,8 @@
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from sqlalchemy import select, update
+from sqlalchemy import delete, event, select, update
+from sqlalchemy.orm import ORMExecuteState
 
 from app.core.errors import AppError
 from app.features.auth import service
@@ -67,3 +68,22 @@ async def test_orm_update_refreshes_updated_at(db_session):
     admin.name = "Renamed"
     await db_session.commit()
     assert admin.updated_at >= admin.created_at
+
+
+async def test_session_deleted_after_lookup_resolves_to_none(db_session, make_admin):
+    token = await service.create_session(db_session, await make_admin())
+    deleted = False
+
+    # simulates a logout in another tab landing between the lookup and the renewal
+    def delete_after_lookup(state: ORMExecuteState):
+        nonlocal deleted
+        if deleted or not state.is_select:
+            return None
+        deleted = True
+        loaded = state.invoke_statement().freeze()
+        # unsynchronized like a delete from another transaction
+        state.session.execute(delete(AdminSession).execution_options(synchronize_session=False))
+        return loaded()
+
+    event.listen(db_session.sync_session, "do_orm_execute", delete_after_lookup)
+    assert await service.resolve_session(db_session, token) is None

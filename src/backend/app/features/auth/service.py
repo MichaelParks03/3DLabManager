@@ -3,7 +3,7 @@ import secrets
 from datetime import UTC, datetime, timedelta
 
 from pwdlib import PasswordHash
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.concurrency import run_in_threadpool
@@ -108,10 +108,15 @@ async def resolve_session(db: AsyncSession, token: str) -> Admin | None:
         return None
     if not admin.is_active:
         return None
-    session.last_used_at = now
-    session.expires_at = _session_expiry()
+    # a concurrent logout or deactivation may have deleted the row since the lookup
+    renewed = await db.scalar(
+        update(AdminSession)
+        .where(AdminSession.id == session.id)
+        .values(last_used_at=now, expires_at=_session_expiry())
+        .returning(AdminSession.id)
+    )
     await db.commit()
-    return admin
+    return admin if renewed is not None else None
 
 
 async def delete_session(db: AsyncSession, token: str) -> None:
