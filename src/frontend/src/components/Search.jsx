@@ -15,7 +15,7 @@ function SearchBar({ variant = 'navbar' }) {
   return <form onSubmit={handleSearch} className={`searchBar searchBar--${variant}`}>
     <input 
       type="text"
-      placeholder="Enter Item Here..."
+      placeholder="Search Item Here..."
       className="searchBar-input"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}

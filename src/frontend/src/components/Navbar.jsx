@@ -6,6 +6,7 @@ import "../css/Navbar.css"
 
 function Navbar() {
   const { pathname } = useLocation();
+  const loggedIn = true;
 
   return (
     <nav className="navbar">
@@ -17,9 +18,16 @@ function Navbar() {
         <Link to="/" className="navbar-el">Home</Link>
         <Link to="/labs" className="navbar-el">Labs</Link>
         <Link to="/tickets" className="navbar-el">Tickets</Link>
-        <Link to="/login" className="navbar-el">
-          <FontAwesomeIcon icon="fa-solid fa-circle-user" style={{fontSize : "30px"}}/>
-        </Link>
+        { loggedIn ? (
+            <Link to="/account" className="navbar-el">
+              <FontAwesomeIcon icon="fa-solid fa-circle-user" style={{fontSize : "25px"}}/>
+            </Link>
+          ) : (
+          <Link to="/login" className="navbar-el">
+            <FontAwesomeIcon icon="fa-solid fa-arrow-right-to-bracket" style={{fontSize : "25px"}} />
+          </Link>
+          )
+        }
       </div>
       <div className='navbar-underline'></div>
     </nav>

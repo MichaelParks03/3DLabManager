@@ -75,4 +75,12 @@
   transition: .3s;
 }
 
+.home-voice-btn:hover {
+  background-color: whitesmoke;
+  color: rgb(14, 77, 0);
+  cursor: pointer;
+
+  transition: .3s;
+}
+
 

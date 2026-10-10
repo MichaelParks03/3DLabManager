@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCircleUser, faMagnifyingGlass, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { faCircleUser, faMagnifyingGlass, faMicrophone, faArrowRightToBracket} from '@fortawesome/free-solid-svg-icons';
 import Home from './pages/Home';
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
@@ -10,7 +10,7 @@ import Login from './pages/Login'
 
 import "./css/App.css"
 
-library.add(faCircleUser, faMagnifyingGlass, faMicrophone);
+library.add(faCircleUser, faMagnifyingGlass, faMicrophone,faArrowRightToBracket);
 
 function AppLayout() {
   const { pathname } = useLocation();
