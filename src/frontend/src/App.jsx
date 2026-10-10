@@ -5,8 +5,8 @@ import { faCircleUser, faMagnifyingGlass, faMicrophone, faArrowRightToBracket} f
 import Home from './pages/Home';
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
+import Labs from './pages/Labs'
 // import InventoryList from './pages/InventoryList';
-// import Login from './pages/Login';
 
 import "./css/App.css"
 
@@ -22,7 +22,7 @@ function AppLayout() {
       <div className='app-content'>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/labs" element={<Home />} />
+        <Route path="/labs" element={<Labs />} />
         <Route path="/tickets" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/inventory" element={<Home />} />

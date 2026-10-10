@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.labs {
+  width: 100dvw;
+  height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.labs-dropdown-container {
+  width:80%;
+  height:40px;
+
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.labs-dropdown:hover {
+  cursor: pointer;
+}
+
+.labs-dropdown {
+  width: 80px;
+  height: 40px;
+
+  font-size: 17px;
+  
+  background-color: transparent;
+
+  border:none;
+}
+
+.labs-underline {
+  width:80px;
+  height: 2px;
+
+  background-color: rgb(14, 77, 0);
+}
+
+.labs-canvas {
+  /* width and height set in jsx file */
+  justify-self: flex-end;
+  box-shadow: 0 0 10px rgb(0,0,0, 0.1);
+}
