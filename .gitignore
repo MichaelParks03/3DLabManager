@@ -151,3 +151,5 @@ frontend/public/models/
 *.toc
 *.ver
 *.synctex.gz
+
+chromeDemo.js
