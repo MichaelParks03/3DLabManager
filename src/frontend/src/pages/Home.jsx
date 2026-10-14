@@ -4,22 +4,17 @@ import "../css/Home.css"
 
 import { MeshGradient } from "@paper-design/shaders-react";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-//import {useState, useEffect};
+
 
 /*
-Chrome developer demo referenced extensively: https://chrome.dev/web-ai-demos/speech-api-playground/
+react-speech-recognition and example used extensively. https://github.com/JamesBrill/react-speech-recognition
 */
 
-function test(){
-	console.log("WWKPIOJOIUNHJIUNHIUNHOIHIUHp9");
-}
-
 function Home (){
+	//Setup speech recognition library
 	const {
     transcript,
-    listening,
 		browserSupportsSpeechRecognition
   } = useSpeechRecognition();
 	const startListening = () => SpeechRecognition.startListening({ continuous: false });
@@ -38,6 +33,7 @@ function Home (){
     <div className="home-search">
       <SearchBar variant="home" placeholder={transcript}/>
     </div>    
+		{/* Conditionally display microphone button depending on support */}
 		{browserSupportsSpeechRecognition? <MicButton onClick={startListening}/> : null }
 	</div>
 }
