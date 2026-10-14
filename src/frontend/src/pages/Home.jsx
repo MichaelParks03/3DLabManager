@@ -4,26 +4,19 @@ import "../css/Home.css"
 import { MeshGradient } from "@paper-design/shaders-react";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 //import {useState, useEffect};
 
 /*
 Chrome developer demo referenced extensively: https://chrome.dev/web-ai-demos/speech-api-playground/
 */
 
-function handleClick()
-{
-	recognition.start();
-}
-
 function Home (){
-	const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-	if (SpeechRecognition)
-	{
-		const SpeechRecognitionPhrase = window.SpeechRecognitionPhrase || window.webkitSpeechRecognitionPhrase;
-		const recognition = new SpeechRecognition();
-		window.currentRecognition = recognition;
-	}
+	const {
+    transcript,
+    listening,
+  } = useSpeechRecognition();
+	const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
   return <div className="home">
     <div className="home-background" aria-hidden="true">
@@ -44,12 +37,12 @@ function Home (){
 		*/}
     <div className="home-voice-btn-container">
       <button className="home-voice-btn"
-				onClick={handleClick}>
+				onClick={startListening}>
         <FontAwesomeIcon icon="fa-solid fa-microphone" />
       </button>
     </div>
-  </div>
-
+  <p>{transcript}</p>
+	</div>
 }
 
 export default Home
