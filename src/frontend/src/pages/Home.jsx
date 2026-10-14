@@ -1,4 +1,5 @@
 import SearchBar from "../components/Search"
+import MicButton from "../components/MicButton";
 import "../css/Home.css"
 
 import { MeshGradient } from "@paper-design/shaders-react";
@@ -11,10 +12,15 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 Chrome developer demo referenced extensively: https://chrome.dev/web-ai-demos/speech-api-playground/
 */
 
+function test(){
+	console.log("WWKPIOJOIUNHJIUNHIUNHOIHIUHp9");
+}
+
 function Home (){
 	const {
     transcript,
     listening,
+		browserSupportsSpeechRecognition
   } = useSpeechRecognition();
 	const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
@@ -31,16 +37,8 @@ function Home (){
 
     <div className="home-search">
       <SearchBar variant="home"/>
-    </div>
-    {/* TODO: make the voice only be active for the kiosk (maybe have a hidden toggle?) 
-		check status of SpeechRecognition? 
-		*/}
-    <div className="home-voice-btn-container">
-      <button className="home-voice-btn"
-				onClick={startListening}>
-        <FontAwesomeIcon icon="fa-solid fa-microphone" />
-      </button>
-    </div>
+    </div>    
+		{browserSupportsSpeechRecognition? <MicButton onClick={startListening}/> : null }
   <p>{transcript}</p>
 	</div>
 }
