@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import "../css/Search.css"
 
-function SearchBar({ variant = 'navbar' }) {
+function SearchBar({ variant = 'navbar', placeholder="Search Item Here..." }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -15,7 +15,7 @@ function SearchBar({ variant = 'navbar' }) {
   return <form onSubmit={handleSearch} className={`searchBar searchBar--${variant}`}>
     <input 
       type="text"
-      placeholder="Search Item Here..."
+      placeholder={placeholder}
       className="searchBar-input"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}

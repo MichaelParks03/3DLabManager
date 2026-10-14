@@ -36,10 +36,9 @@ function Home (){
     </div>
 
     <div className="home-search">
-      <SearchBar variant="home"/>
+      <SearchBar variant="home" placeholder={transcript}/>
     </div>    
 		{browserSupportsSpeechRecognition? <MicButton onClick={startListening}/> : null }
-  <p>{transcript}</p>
 	</div>
 }
 
