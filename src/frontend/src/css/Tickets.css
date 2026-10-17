@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.tickets {
+  width: auto;
+  height: 100dvh;
+
+  background-color: white;
+  display:flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.tickets-container {
+  margin-top: 15dvh;
+
+  height: auto;
+  width: 40dvw;
+  max-width: 1000px;
+  min-width: 900px;
+  /* TODO: figure out a better way to set contraints */
+
+  display: flex;
+  flex-direction: column;
+}
+
+.tickets-h2 {
+  font-size: 30px;
+  padding-bottom: 20px;
+}
+
+.tickets-element {
+  height: auto;
+  width: 100%;
+
+  font-size: 17px;
+
+  background-color: whitesmoke;
+
+  padding: 15px 20px;
+  margin: 10px 0;
+
+  border: 2px solid rgb(14, 77, 0);
+  border-radius: 10px;
+
+  box-shadow: 0px 6px -4px -1px rgb(0, 0, 0, 0.1);
+
+  display: grid;
+  grid-template-columns: minmax(100px, 0.7fr) minmax(240px, 1.7fr) 1fr 1fr auto;
+  align-items: center;
+  column-gap: 12px;
+
+  cursor: pointer;
+}
+
+.tickets-element p {
+  justify-self: start;
+}
+
+.tickets-element-title {
+  font-weight: 600;
+}
+
+.tickets-dropdown-arrow {
+  color: rgb(14,77,0);
+}
+
+.tickets-description {
+  grid-column: 1 / -1;
+  text-align: left;
+
+  margin-top: 10px;
+}
+
+.tickets-description-text {
+  margin-top: 6px;
+  padding: 8px;
+  background-color: #e8e8e8;
+  border-radius: 4px;
+}
+
+

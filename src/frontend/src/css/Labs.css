@@ -14,7 +14,7 @@
 }
 
 .labs-dropdown-container {
-  width:80%;
+  width: 99dvw;
   height:40px;
 
   display: flex;
@@ -48,4 +48,5 @@
   /* width and height set in jsx file */
   justify-self: flex-end;
   box-shadow: 0 0 10px rgb(0,0,0, 0.1);
+  margin-bottom: 10px;
 }

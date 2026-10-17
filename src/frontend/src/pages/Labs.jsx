@@ -40,7 +40,7 @@ function Labs() {
       </div>
 
       <Canvas className='labs-canvas'
-              style={{width: '80dvw', height: '80dvh'}}>
+              style={{width: '99dvw', height: '80dvh'}}>
         <Suspense fallback={null}>
           <Stage environment="city" intensity={0.6}>
             <Model labModel={modelUrlFor(labModel)}/>
