@@ -1,12 +1,23 @@
 import SearchBar from "../components/Search"
+import MicButton from "../components/MicButton";
 import "../css/Home.css"
 
 import { MeshGradient } from "@paper-design/shaders-react";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
+
+/*
+react-speech-recognition and example used extensively. https://github.com/JamesBrill/react-speech-recognition
+*/
 
 function Home (){
+	//Setup speech recognition library
+	const {
+    transcript,
+		browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+	const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
   return <div className="home">
     <div className="home-background" aria-hidden="true">
@@ -20,16 +31,11 @@ function Home (){
     </div>
 
     <div className="home-search">
-      <SearchBar variant="home"/>
-    </div>
-    {/* TODO: make the voice only be active for the kiosk (maybe have a hidden toggle?) */}
-    <div className="home-voice-btn-container">
-      <button className="home-voice-btn">
-        <FontAwesomeIcon icon="fa-solid fa-microphone" />
-      </button>
-    </div>
-  </div>
-
+      <SearchBar variant="home" placeholder={transcript}/>
+    </div>    
+		{/* Conditionally display microphone button depending on support */}
+		{browserSupportsSpeechRecognition? <MicButton onClick={startListening}/> : null }
+	</div>
 }
 
 export default Home
