@@ -1,20 +1,20 @@
-This section covers how the 3D Lab Manager keeps the people who use it safe. The system is software running on a server and a wall mounted touchscreen kiosk. The kiosk is a plugged in electrical device in a busy shared lab, so it carries a risk of electric shock from a damaged cable or device and of damage from rough handling. The system does not control any lab equipment. Its safety requirements focus on how the kiosk is installed, powered, and protected, what the screen shows, and helping students avoid equipment that has been reported as unsafe.
+This section covers how the 3D Lab Manager keeps the people who use it safe. The system is software running on a server and a touchscreen kiosk on a stand in the lab. The kiosk is a plugged in electrical device in a busy shared lab, so it carries a risk of electric shock from a damaged cable or device and of damage from rough handling. The system does not control any lab equipment. Its safety requirements focus on how the kiosk is installed, powered, and protected, what the screen shows, and helping students avoid equipment that has been reported as unsafe.
 
-\subsection{Kiosk mounting and walkway clearance}
+\subsection{Kiosk stand stability and walkway clearance}
 \subsubsection{Description}
-The kiosk will be fastened to the wall with a mount rated for at least the combined weight of the tablet and its enclosure, so it cannot fall if it is bumped or leaned on. The enclosure will cover the edges of the tablet so there are no exposed sharp corners or glass edges. Because it will hang between 27 and 80 inches above the floor, it will stick out no more than 4 inches from the wall, so people walking past, including people with low vision, will not walk into it. The touchscreen will be placed between 15 and 48 inches above the floor, so every user can reach it without standing on anything.
+The touchscreen will be locked onto the existing kiosk stand provided by Steven McDermott. The stand will be placed along the side of the lab, out of walkways, and secured or weighted so it cannot tip over if it is bumped or leaned on. The enclosure will cover the edges of the touchscreen so there are no exposed sharp corners or glass edges, and no part of the kiosk will stick out into a walkway where people walking past, including people with low vision, could walk into it. The touchscreen will be placed between 15 and 48 inches above the floor, so every user can reach it without standing on anything.
 \subsubsection{Source}
-Steven McDermott, lab manager (kiosk mounted against the wall along the side of the lab), and the Americans with Disabilities Act.
+Steven McDermott, lab manager (existing kiosk stand, requirement 3.1), and the Americans with Disabilities Act.
 \subsubsection{Constraints}
-The wall material in Lab 208 is unknown, and mounting hardware may only be installed with permission from the lab manager and the university. The mount must also fit within the \$800 project budget along with the tablet.
+The touchscreen must fit the existing stand, so it must use a VESA mounting pattern, as required in requirement 3.1. The stand can only be placed where it does not block other teams' work areas and is within reach of an outlet.
 \subsubsection{Standards}
-2010 ADA Standards for Accessible Design, Section 307 (Protruding Objects) and Section 308 (Reach Ranges); VESA Mounting Interface Standard, if the chosen enclosure uses a VESA mounting pattern.
+2010 ADA Standards for Accessible Design, Section 307 (Protruding Objects) and Section 308 (Reach Ranges); VESA Mounting Interface Standard.
 \subsubsection{Priority}
 Critical
 
 \subsection{Kiosk electrical safety}
 \subsubsection{Description}
-The kiosk stays plugged in at all times, so it must not expose anyone to electric shock. It will be powered only by its manufacturer supplied power adapter, plugged into an existing grounded wall outlet in Lab 208, and the team will not add to or modify any building wiring. The power cable will run along the wall inside a cable cover, and the point where it connects to the tablet will be inside the enclosure, so the cable cannot be pulled loose, pinched, or left with exposed wires. If the cable, adapter, or tablet is ever damaged, the kiosk will be unplugged and taken out of use until it is replaced.
+The kiosk stays plugged in at all times, so it must not expose anyone to electric shock. It will be powered only by its manufacturer supplied power adapter, plugged into an existing grounded wall outlet in Lab 208, and the team will not add to or modify any building wiring. The power cable will run down the stand and along the wall inside a cable cover, and the point where it connects to the tablet will be inside the enclosure, so the cable cannot be pulled loose, pinched, or left with exposed wires. If the cable, adapter, or tablet is ever damaged, the kiosk will be unplugged and taken out of use until it is replaced.
 \subsubsection{Source}
 CSE Senior Design laboratory policy
 \subsubsection{Constraints}
@@ -36,25 +36,25 @@ IEC 62262, Degrees of protection provided by enclosures against external mechani
 \subsubsection{Priority}
 High
 
-\subsection{Information only system}
+\subsection{No control of lab equipment}
 \subsubsection{Description}
-The 3D Lab Manager will only display information. It will not turn on, turn off, unlock, or send commands to any lab equipment, so a software error cannot start a machine or create a physical hazard in the lab.
+The 3D Lab Manager only stores and displays information, such as inventory, item locations, check outs, and tickets. It will not turn on, turn off, unlock, or send commands to any lab equipment, so a software error cannot start a machine or create a physical hazard in the lab.
 \subsubsection{Source}
 Team
 \subsubsection{Constraints}
-Any future feature, such as wireless tracking of tools, must also stay read only. A later feature that controls equipment would need its own safety review before it is added.
+Any future feature, such as wireless tracking of tools, must also avoid controlling equipment. A later feature that does control equipment would need its own safety review before it is added.
 \subsubsection{Standards}
 None identified. The requirement will be verified by design review, confirming that no part of the system has a connection that can send commands to lab equipment.
 \subsubsection{Priority}
 Critical
 
-\subsection{Warnings for equipment with open safety reports}
+\subsection{Warnings for equipment with open safety tickets}
 \subsubsection{Description}
-When a student reports a safety problem with a piece of lab equipment, such as a damaged power cord, the item's page and its search result will show a clear warning until the lab manager resolves the report, so other students know not to use it. The warning will use a red or orange color together with a text label, so it is not shown by color alone.
+When a student submits a ticket about a safety problem with a piece of lab equipment, such as a damaged power cord, the item's page and its search result will show a clear warning until an admin closes the ticket, so other students know not to use it. The warning will use a red or orange color together with a text label, so it is not shown by color alone.
 \subsubsection{Source}
-Team, based on the issue reporting feature in the backend design, where students can mark a report as a safety problem.
+Team, based on the ticket tracker (requirement 3.11) and the tickets page (requirement 8.1).
 \subsubsection{Constraints}
-Reports are anonymous, so some may be false. The warning only shows while a report is open, and only the lab manager can change an item's status, which matches the backend design where reports never change an item's status on their own. The warning is a reminder for students and does not replace the lab's own rules for equipment that is out of service.
+A ticket could be mistaken, so the warning only shows while the ticket is open, and only an admin can change an item's status; tickets never change an item's status on their own. The warning is a reminder for students and does not replace the lab's own rules for equipment that is out of service.
 \subsubsection{Standards}
 ANSI Z535.1, Safety Colors (red for danger, orange for warning); Web Content Accessibility Guidelines (WCAG) 2.2, Success Criterion 1.4.1, Use of Color.
 \subsubsection{Priority}
