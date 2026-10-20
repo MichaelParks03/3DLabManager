@@ -1,37 +1,73 @@
-Include a header paragraph specific to your product here. Safety requirements might address items specific to your product such as: no exposure to toxic chemicals; lack of sharp edges that could harm a user; no breakable glass in the enclosure; no direct eye exposure to infrared/laser beams; packaging/grounding of electrical connections to avoid shock; etc.
+This section covers how the 3D Lab Manager keeps the people who use it safe. The system is software running on a server and a wall mounted touchscreen kiosk. The kiosk is a plugged in electrical device in a busy shared lab, so it carries a risk of electric shock from a damaged cable or device and of damage from rough handling. The system does not control any lab equipment. Its safety requirements focus on how the kiosk is installed, powered, and protected, what the screen shows, and helping students avoid equipment that has been reported as unsafe.
 
-\subsection{Laboratory equipment lockout/tagout (LOTO) procedures}
+\subsection{Kiosk mounting and walkway clearance}
 \subsubsection{Description}
-Any fabrication equipment provided used in the development of the project shall be used in accordance with OSHA standard LOTO procedures. Locks and tags are installed on all equipment items that present use hazards, and ONLY the course instructor or designated teaching assistants may remove a lock. All locks will be immediately replaced once the equipment is no longer in use.
+The kiosk will be fastened to the wall with a mount rated for at least the combined weight of the tablet and its enclosure, so it cannot fall if it is bumped or leaned on. The enclosure will cover the edges of the tablet so there are no exposed sharp corners or glass edges. Because it will hang between 27 and 80 inches above the floor, it will stick out no more than 4 inches from the wall, so people walking past, including people with low vision, will not walk into it. The touchscreen will be placed between 15 and 48 inches above the floor, so every user can reach it without standing on anything.
 \subsubsection{Source}
-CSE Senior Design laboratory policy
+Steven McDermott, lab manager (kiosk mounted against the wall along the side of the lab), and the Americans with Disabilities Act.
 \subsubsection{Constraints}
-Equipment usage, due to lock removal policies, will be limited to availability of the course instructor and designed teaching assistants.
+The wall material in Lab 208 is unknown, and mounting hardware may only be installed with permission from the lab manager and the university. The mount must also fit within the \$800 project budget along with the tablet.
 \subsubsection{Standards}
-Occupational Safety and Health Standards 1910.147 - The control of hazardous energy (lockout/tagout).
+2010 ADA Standards for Accessible Design, Section 307 (Protruding Objects) and Section 308 (Reach Ranges); VESA Mounting Interface Standard, if the chosen enclosure uses a VESA mounting pattern.
 \subsubsection{Priority}
 Critical
 
-\subsection{National Electric Code (NEC) wiring compliance}
+\subsection{Kiosk electrical safety}
 \subsubsection{Description}
-Any electrical wiring must be completed in compliance with all requirements specified in the National Electric Code. This includes wire runs, insulation, grounding, enclosures, over-current protection, and all other specifications.
+The kiosk stays plugged in at all times, so it must not expose anyone to electric shock. It will be powered only by its manufacturer supplied power adapter, plugged into an existing grounded wall outlet in Lab 208, and the team will not add to or modify any building wiring. The power cable will run along the wall inside a cable cover, and the point where it connects to the tablet will be inside the enclosure, so the cable cannot be pulled loose, pinched, or left with exposed wires. If the cable, adapter, or tablet is ever damaged, the kiosk will be unplugged and taken out of use until it is replaced.
 \subsubsection{Source}
 CSE Senior Design laboratory policy
 \subsubsection{Constraints}
-High voltage power sources, as defined in NFPA 70, will be avoided as much as possible in order to minimize potential hazards.
+The kiosk can only be placed within reach of an existing outlet, because extension cords may not be used in place of permanent wiring. The tablet and adapter must be bought from a certified manufacturer, which may cost more than generic parts.
 \subsubsection{Standards}
-NFPA 70
+NFPA 70, National Electrical Code; IEC 62368-1, Audio/video, information and communication technology equipment, Part 1: Safety requirements (the tablet and its power adapter must carry this certification or an equivalent listing).
 \subsubsection{Priority}
 Critical
 
-\subsection{RIA robotic manipulator safety standards}
+\subsection{Kiosk durability under rough handling}
 \subsubsection{Description}
-Robotic manipulators, if used, will either housed in a compliant lockout cell with all required safety interlocks, or certified as a "collaborative" unit from the manufacturer.
+Students will tap, lean on, and bump into the kiosk in a busy lab. The enclosure will be locked and hold the tablet firmly, with a protective cover over the screen, so hard taps or a bump from a cart or tool will not crack the screen or expose its electronics. The enclosure will have no openings that let liquids or small parts reach the tablet or its power connection.
 \subsubsection{Source}
-CSE Senior Design laboratory policy
+Team (the kiosk will be left unattended in a shared lab used by every senior design team)
 \subsubsection{Constraints}
-Collaborative robotic manipulators will be preferred over non-collaborative units in order to minimize potential hazards. Sourcing and use of any required safety interlock mechanisms will be the responsibility of the engineering team.
+A stronger, impact rated enclosure costs more and must fit within the \$800 project budget along with the tablet and mount. Kiosk hardware has not been chosen yet, so the enclosure will be part of the hardware comparison in the next sprint.
 \subsubsection{Standards}
-ANSI/RIA R15.06-2012 American National Standard for Industrial Robots and Robot Systems, RIA TR15.606-2016 Collaborative Robots
+IEC 62262, Degrees of protection provided by enclosures against external mechanical impacts (IK code), used to compare how much impact each enclosure can take.
+\subsubsection{Priority}
+High
+
+\subsection{Information only system}
+\subsubsection{Description}
+The 3D Lab Manager will only display information. It will not turn on, turn off, unlock, or send commands to any lab equipment, so a software error cannot start a machine or create a physical hazard in the lab.
+\subsubsection{Source}
+Team
+\subsubsection{Constraints}
+Any future feature, such as wireless tracking of tools, must also stay read only. A later feature that controls equipment would need its own safety review before it is added.
+\subsubsection{Standards}
+None identified. The requirement will be verified by design review, confirming that no part of the system has a connection that can send commands to lab equipment.
 \subsubsection{Priority}
 Critical
+
+\subsection{Warnings for equipment with open safety reports}
+\subsubsection{Description}
+When a student reports a safety problem with a piece of lab equipment, such as a damaged power cord, the item's page and its search result will show a clear warning until the lab manager resolves the report, so other students know not to use it. The warning will use a red or orange color together with a text label, so it is not shown by color alone.
+\subsubsection{Source}
+Team, based on the issue reporting feature in the backend design, where students can mark a report as a safety problem.
+\subsubsection{Constraints}
+Reports are anonymous, so some may be false. The warning only shows while a report is open, and only the lab manager can change an item's status, which matches the backend design where reports never change an item's status on their own. The warning is a reminder for students and does not replace the lab's own rules for equipment that is out of service.
+\subsubsection{Standards}
+ANSI Z535.1, Safety Colors (red for danger, orange for warning); Web Content Accessibility Guidelines (WCAG) 2.2, Success Criterion 1.4.1, Use of Color.
+\subsubsection{Priority}
+High
+
+\subsection{Safe screen content}
+\subsubsection{Description}
+Nothing on the kiosk or the website will flash more than three times in any one second. This includes the animated background on the home page, page transitions, and the 3D model viewer, so the screen is safe for users who are sensitive to flashing light.
+\subsubsection{Source}
+Team
+\subsubsection{Constraints}
+The home page uses an animated background, so its speed and changes in brightness must stay slow and smooth. Any new animation added later must be checked against this requirement before release.
+\subsubsection{Standards}
+Web Content Accessibility Guidelines (WCAG) 2.2, Success Criterion 2.3.1, Three Flashes or Below Threshold.
+\subsubsection{Priority}
+High

@@ -1,13 +1,61 @@
-Include a header paragraph specific to your product here. Performance requirements address items such as: how fast specific critical operations must complete; how long it takes to start/stop activities; how long the battery must last; maximum time it must take to set up; etc.
+This section lists how quickly the 3D Lab Manager must respond for students to use it instead of asking the lab manager. All targets are measured on the lab's Linux server and the kiosk touchscreen over the senior design lab network, since that is where the system will run. If finding an item on the kiosk takes longer than walking over and asking Steven McDermott, the system has failed its main purpose, so these targets are kept short.
 
-\subsection{Requirement Name}
+\subsection{Search Results Response Time}
 \subsubsection{Description}
-Detailed requirement description...
+When a user submits a typed search, the list of matching items will appear on screen within 1 second for at least 95\% of searches, measured from pressing search to the results being displayed. This applies to an inventory of up to 2,000 items with up to 20 people searching at the same time. Suggestions shown while the user is still typing will appear within 300 milliseconds of each keystroke.
 \subsubsection{Source}
-Source
+Steven McDermott, lab manager (students should be able to find items without contacting him), and the team's search design, which sets a target of under 100 milliseconds to process each query on the lab server.
 \subsubsection{Constraints}
-Detailed description of applicable constraints...
+Search runs entirely on the lab's Linux server using a small local language model, because the sponsor asked the team to avoid outside subscriptions and ongoing costs. The server's hardware has not been provided yet, so these targets will be confirmed with the team's search benchmark once it is available. A paid cloud search service could meet the targets more easily, but it would add a monthly cost and make search depend on an internet connection.
 \subsubsection{Standards}
-List of applicable standards
+ISO/IEC 25010:2023, Systems and software Quality Requirements and Evaluation (SQuaRE), Product quality model, performance efficiency characteristic (time behaviour).
 \subsubsection{Priority}
-Priority
+Critical
+
+\subsection{Voice Search Response Time}
+\subsubsection{Description}
+After a user finishes speaking into the kiosk microphone, the spoken words will appear in the search bar within 2 seconds, and the matching results will appear within 1 second after that, the same as a typed search. The microphone button will show that it is listening within half a second of being pressed, so the user knows when to start talking.
+\subsubsection{Source}
+Steven McDermott, lab manager (Sprint 2 sponsor meeting, where he asked the team to explore voice recognition that keeps outside dependencies to a minimum), and the team's voice search prototype.
+\subsubsection{Constraints}
+The current prototype uses the speech recognition built into the web browser, which is only supported in Chrome and Safari and, depending on the browser, may need an internet connection. If the kiosk is not allowed internet access, a speech model would have to run locally, which may be slower on low cost kiosk hardware. Background noise from tools and other teams in the lab can also slow down or reduce the accuracy of recognition.
+\subsubsection{Standards}
+W3C Web Speech API specification (Community Group Report).
+\subsubsection{Priority}
+High
+
+\subsection{3D Lab Model Loading and Display}
+\subsubsection{Description}
+When a user opens a lab on the Labs page, its 3D model will load and be ready to rotate and zoom within 5 seconds on the kiosk. While the user turns or zooms the model, it will move smoothly at no less than 30 frames per second. Each lab model file will be kept under 10 megabytes; the current models of Labs 202, 203, 208, and 335 range from about 0.2 to 5.7 megabytes.
+\subsubsection{Source}
+Steven McDermott, lab manager (equipment locations shown on a 3D model of the lab), and the team's Labs page prototype.
+\subsubsection{Constraints}
+The kiosk is expected to be a low cost tablet to fit within the \$800 project budget, so its graphics hardware is limited. Models produced by a 3D scanner are often much larger than the current hand built models, so new scans may need to be simplified before they are used on the kiosk.
+\subsubsection{Standards}
+glTF 2.0 (ISO/IEC 12113:2022) for 3D model files, and WebGL 2.0 (Khronos Group) for drawing the models in the browser.
+\subsubsection{Priority}
+High
+
+\subsection{Page Load Time}
+\subsubsection{Description}
+Every page of the website will be usable within 3 seconds of being opened on the kiosk or on a student's phone connected to the university network. The main content of each page, such as the search bar or the list of results, will be visible within 2.5 seconds.
+\subsubsection{Source}
+Team
+\subsubsection{Constraints}
+The website is served from a single Linux server in the lab, and the speed of the campus network is outside the team's control. Item photos and 3D models are the largest files, so they will be loaded after the rest of the page and kept in the browser's cache between visits.
+\subsubsection{Standards}
+Google Core Web Vitals, Largest Contentful Paint (2.5 seconds or less is rated good).
+\subsubsection{Priority}
+Moderate
+
+\subsection{Kiosk Startup After a Power Loss}
+\subsubsection{Description}
+If the kiosk loses power or restarts, it will turn back on and return to the home screen on its own within 2 minutes of power returning, without anyone needing to log in or open the website by hand.
+\subsubsection{Source}
+Team (the kiosk will be left unattended in Lab 208)
+\subsubsection{Constraints}
+This depends on the kiosk hardware supporting automatic startup and a locked kiosk mode. Kiosk hardware has not been selected yet, so this requirement will be part of the hardware comparison in the next sprint.
+\subsubsection{Standards}
+None identified. The requirement will be verified by unplugging the kiosk, plugging it back in, and timing how long it takes to return to the home screen.
+\subsubsection{Priority}
+Moderate
