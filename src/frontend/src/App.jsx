@@ -6,17 +6,20 @@ import { faCircleUser,
          faMicrophone, 
          faArrowRightToBracket, 
          faAngleDown,
-         faAngleUp } from '@fortawesome/free-solid-svg-icons';
+         faAngleUp,
+         faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Home from './pages/Home';
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Labs from './pages/Labs'
 import Tickets from './pages/Tickets'
+import Item from './pages/Item'
 // import InventoryList from './pages/InventoryList';
 
 import "./css/App.css"
 
-library.add(faCircleUser, faMagnifyingGlass, faMicrophone, faArrowRightToBracket, faAngleDown, faAngleUp);
+library.add(faCircleUser, faMagnifyingGlass, faMicrophone, faArrowRightToBracket, 
+            faAngleDown, faAngleUp, faArrowLeft);
 
 function AppLayout() {
   const { pathname } = useLocation();
@@ -32,7 +35,7 @@ function AppLayout() {
         <Route path="/tickets" element={<Tickets />} />
         <Route path="/login" element={<Login />} />
         <Route path="/inventory" element={<Home />} />
-        <Route path="/item" element={<Home />} />
+        <Route path="/item" element={<Item />} />
       </Routes>
       </div>
     </div>
