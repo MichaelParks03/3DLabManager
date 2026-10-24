@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import '../css/Tickets.css'
 
@@ -7,15 +7,22 @@ import '../css/Tickets.css'
 
 function Ticket({ ticket }) {
   const [isActive, toggleIsActive] = useState(false);
+  const [currentTime, setCurrentTime] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setCurrentTime(Date.now()), 0);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClick = () => {
     toggleIsActive(!isActive);
   }
 
-  const deltaTime = (submitted_time) => {
-    const current_time = new Date()
+  const deltaTime = (submittedTime) => {
+    if (currentTime === null) return '...';
 
-    return current_time.getDate() - submitted_time.getDate()
+    return Math.floor((currentTime - new Date(submittedTime).getTime()) / 86400000);
   }
 
   return (
