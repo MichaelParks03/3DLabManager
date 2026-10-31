@@ -1,0 +1,57 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.checked_item {
+  width: 80%;
+
+  border-radius: 5px;
+
+  box-shadow: 2px 4px 10px 5px rgba(0,0,0,0.21);
+
+  padding: 10px;
+  margin: 10px 0;
+
+  display: grid;
+  grid-template-columns: 20% minmax(0, 0.5fr) minmax(180px, 1fr);
+  align-items: center;
+  column-gap: 16px;
+}
+
+.checked_item img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.item-name {
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.item-duration {
+  color: #666;
+  font-size: 14px;
+  text-align: right;
+}
+
+@media (max-width: 520px) {
+  .checked_item {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+
+  .checked_item img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .item-duration {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+
+

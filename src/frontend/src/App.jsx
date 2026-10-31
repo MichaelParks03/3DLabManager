@@ -15,7 +15,11 @@ import Labs from './pages/Labs'
 import Tickets from './pages/Tickets'
 import Item from './pages/Item'
 import Signup from './pages/Signup'
+import Account from './pages/Account'
 // import InventoryList from './pages/InventoryList';
+
+import drillImage from './assets/images/drill_image.jpg';
+import acctImage from './assets/images/tmp_profile_image.jpeg';
 
 import "./css/App.css"
 
@@ -24,6 +28,20 @@ library.add(faCircleUser, faMagnifyingGlass, faMicrophone, faArrowRightToBracket
 
 function AppLayout() {
   const { pathname } = useLocation();
+  const user = {name: "Devin Wingfield",
+                email: "dtw8917@mavs.uta.edu",
+                team: {
+                  name: "insert team name here",
+                  members: ["Devin Wingfield", "Liam Crowly", "Joshua Thomas", "Samuel Newville", "Micheal Parks"],
+                  desk: "Desk 5 at ERB 208"
+                },
+                items: [
+                  {name: "Drill", checkeoutDate: new Date("October 28, 2026"), image: drillImage},
+                  
+                ],
+                image: acctImage,
+  }             
+
 
   return (
     <div className="app">
@@ -38,6 +56,7 @@ function AppLayout() {
         <Route path="/inventory" element={<Home />} />
         <Route path="/item" element={<Item />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/account" element={<Account user={user} team={user.team} />} />
       </Routes>
       </div>
     </div>

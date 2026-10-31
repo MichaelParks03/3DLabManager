@@ -6,7 +6,7 @@ import "../css/Navbar.css"
 
 function Navbar() {
   const { pathname } = useLocation();
-  const loggedIn = false;
+  const loggedIn = true;
 
   return (
     <nav className="navbar">
