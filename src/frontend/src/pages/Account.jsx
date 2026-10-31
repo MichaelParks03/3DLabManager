@@ -1,4 +1,5 @@
 import UserItem from '../components/UserItem'
+import defaultIcon from '../assets/images/default-icon.jpg'
 
 import '../css/Account.css'
 
@@ -8,7 +9,7 @@ function Account({ user, team }) {
       <div className="account-container">
         <div className="account-user">
           {/* Maybe add possibility for images */}
-          <img src={user.image} alt={user.name}></img>
+          <img src={user.image || defaultIcon} alt={user.name} />
           <h3>{ user.name }</h3>
           {/* default value should be Null */}
           { user.team && <h4>{ team.name }</h4>}
