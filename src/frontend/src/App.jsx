@@ -14,6 +14,7 @@ import Login from './pages/Login'
 import Labs from './pages/Labs'
 import Tickets from './pages/Tickets'
 import Item from './pages/Item'
+import Signup from './pages/Signup'
 // import InventoryList from './pages/InventoryList';
 
 import "./css/App.css"
@@ -26,7 +27,7 @@ function AppLayout() {
 
   return (
     <div className="app">
-    { pathname !== "/login" && <Navbar /> }
+    { pathname !== "/login" && pathname !== "/signup" && <Navbar /> }
 
       <div className='app-content'>
       <Routes>
@@ -36,6 +37,7 @@ function AppLayout() {
         <Route path="/login" element={<Login />} />
         <Route path="/inventory" element={<Home />} />
         <Route path="/item" element={<Item />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
       </div>
     </div>

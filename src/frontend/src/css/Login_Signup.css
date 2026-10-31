@@ -3,7 +3,8 @@
   padding: 0;
 }
 
-.login {
+.login,
+.signup {
   overflow: hidden;
 
   width: 100%;
@@ -17,20 +18,20 @@
   justify-content: center;
 }
 
-.login-container {
+.login-container,
+.signup-container {
   position: relative;
 
   width: 40dvw;
-  height: 55dvh;
-  min-height: 500px;
+  height: auto;
+  min-height: 300px;
   min-width: 500px;
   max-width: 700px;
-  max-height: 700px;
+  max-height: 800px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
 
   border: 2px solid rgb(14, 77, 0);
@@ -39,9 +40,12 @@
   background-color: whitesmoke;
 
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+
+  padding: 20px 0;
 }
 
-.login-form {
+.login-form,
+.signup-form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -49,21 +53,24 @@
   gap: 1rem;
 }
 
-.login-field {
+.login-field,
+.signup-field {
   width: 80%;
   display: flex;
   flex-direction: column;
 }
 
-.login-header {
-  font-size: 25px;
+.login-header,
+.signup-header {
+  font-size: 23px;
   font-weight: 700;
 
   align-self: flex-start;
   margin: 20px 0;
 }
 
-.login-input {
+.login-input,
+.signup-input {
   box-sizing: border-box;
 
   width: 100%;
@@ -77,7 +84,8 @@
   background-color: transparent;
 }
 
-.login-input-underline {
+.login-input-underline,
+.signup-input-underline {
   position: relative;
 
   width: 100%;
@@ -87,13 +95,21 @@
 
 }
 
-.login-btn {
-  width: 30%;
-  height: 50px;
+.submission-container {
+  width: 80%;
+  height: auto;
 
-  align-self: flex-end;
-  margin-right: 10%;
-  margin-top: 10%;
+  margin: 15px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-btn,
+.signup-btn {
+  width: 37%;
+  height: 50px;
 
   font-size: 15px;
 
@@ -104,4 +120,40 @@
   border-radius: 25px;
 
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.signup-btn:hover,
+.login-btn:hover {
+  cursor: pointer;
+}
+
+.link {
+  color: rgb(22, 118, 1);
+
+  text-decoration: underline;
+}
+
+
+.dropdown-container {
+  width: 99%;
+  height:40px;
+
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.dropdown:hover {
+  cursor: pointer;
+}
+
+.dropdown {
+  width: 30%;
+  height: 40px;
+
+  font-size: 17px;
+  
+  background-color: transparent;
+
+  border:none;
 }

@@ -1,6 +1,7 @@
 import { useState } from "react"
+import { Link } from 'react-router-dom';
 
-import "../css/Login.css"
+import "../css/Login_Signup.css"
 
 function Login() {
   const [usernameInput, setUsernameInput] = useState("");
@@ -39,7 +40,11 @@ function Login() {
             />
             <div className="login-input-underline"></div>
           </div>
-          <button type="submit" className="login-btn">Sign in</button>
+
+          <div className="submission-container">
+            <Link to="\signup" className="link">Create an Account</Link>
+            <button type="submit" className="login-btn">Sign in</button>
+          </div>
         </form>
       </div>
     </div>
