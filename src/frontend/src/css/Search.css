@@ -40,3 +40,32 @@
   width: 15vw;
   min-width: 200px;
 }
+
+.results-dropdown {
+  position: absolute; /* Pulls it out of regular flow so it floats over other elements */
+  top: 100%;          /* Positions it immediately below the search bar */
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-height: 200px;   /* Prevents it from going infinitely long */
+  overflow-y: auto;    /* Adds a scrollbar if there are many items */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;       /* Ensures it stays on top of page content */
+}
+
+.result-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.result-item:hover {
+  background-color: #f5f5f5; /* Visual indicator for user hover */
+}
+
+.no-results {
+  padding: 10px;
+  color: #888;
+  font-style: italic;
+}

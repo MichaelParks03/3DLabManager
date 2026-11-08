@@ -33,8 +33,9 @@
   z-index: 1;
 }
 
-.home-search {
+.home > .home-search {
   width: min(600px, 90vw);
+  z-index: 2;
 }
 
 .searchBar--home {
