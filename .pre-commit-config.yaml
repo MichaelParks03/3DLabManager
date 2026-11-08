@@ -1,0 +1,17 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+        files: ^src/backend/
+      - id: ruff-format
+        files: ^src/backend/
+  - repo: local
+    hooks:
+      - id: export-openapi
+        name: export openapi.json
+        entry: uv run --directory src/backend python -m app.cli export-openapi
+        language: system
+        pass_filenames: false
+        files: ^src/backend/app/
