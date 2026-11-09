@@ -18,11 +18,13 @@ function Account({ user, team }) {
         <div className="account-info">
           <h4>Checked Out Items: </h4>
           <div className='userItems'>
-            { user.items && (
+            { user.items ? (
               user.items.map((item) => (
                 <UserItem key={item.name} item={item} />
               )
-            ))}
+            )) : (
+              <div className="no-results">No items checked out</div>
+            )}
           </div>
           { team && (
             <>

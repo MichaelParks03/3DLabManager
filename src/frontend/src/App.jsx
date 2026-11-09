@@ -16,7 +16,7 @@ import Tickets from './pages/Tickets'
 import Item from './pages/Item'
 import Signup from './pages/Signup'
 import Account from './pages/Account'
-// import InventoryList from './pages/InventoryList';
+import Inventory from './pages/Inventory'
 
 import drillImage from './assets/images/drill_image.jpg';
 import acctImage from './assets/images/tmp_profile_image.jpeg';
@@ -53,7 +53,7 @@ function AppLayout() {
         <Route path="/labs" element={<Labs />} />
         <Route path="/tickets" element={<Tickets />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/inventory" element={<Home />} />
+        <Route path="/inventory" element={<Inventory />} />
         <Route path="/item" element={<Item />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/account" element={<Account user={user} team={user.team} />} />

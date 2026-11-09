@@ -16,6 +16,7 @@ function Navbar() {
       </div>
       <div className="navbar-links">
         <Link to="/" className="navbar-el">Home</Link>
+        <Link to="/inventory" className="navbar-el">Inventory</Link>
         <Link to="/labs" className="navbar-el">Labs</Link>
         <Link to="/tickets" className="navbar-el">Tickets</Link>
         { loggedIn ? (

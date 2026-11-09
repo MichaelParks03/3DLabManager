@@ -1,0 +1,66 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.inventory {
+  width: 100%;
+  min-height: 100%;
+  padding: 15dvh 10dvw;
+  box-sizing: border-box;
+}
+
+.inventory_container {
+  width: 100%;
+  min-height: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-content: start;
+  place-items: center;
+
+  /* background-color: aqua; */
+}
+
+
+.itemCard {
+  width: 100%;
+  min-height: 248px;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  gap: 8px;
+  padding: 18px 12px 20px;
+  
+  border: 1px solid #d6d6d6;
+
+  text-align: center;
+}
+
+.itemCard img {
+  display: block;
+  width: min(100%, 150px);
+  height: 150px;
+  object-fit: contain;
+}
+
+.itemCard p {
+  max-width: 100%;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.itemCard:hover {
+  cursor: pointer;
+  border: 4px solid #c1c1c1;
+}
+
+@media (max-width: 480px) {
+  .Inventory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

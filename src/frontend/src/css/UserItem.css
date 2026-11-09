@@ -38,6 +38,12 @@
   text-align: right;
 }
 
+.no-results {
+  padding: 10px;
+  color: #888;
+  font-style: italic;
+}
+
 @media (max-width: 520px) {
   .checked_item {
     grid-template-columns: 50px minmax(0, 1fr);
